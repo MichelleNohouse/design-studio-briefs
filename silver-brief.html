@@ -1,0 +1,372 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Bronze Brief — Production Request · Design Studio</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600;700&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root{
+  --ink:#001E2E;--deep:#003250;--teal:#00818F;--cyan:#5FEFCF;
+  --amber:#E09A20;--green:#22936A;--red:#C03828;--mist:#EBF3F7;
+  --border:#C5D8E4;--ghost:#F5F9FB;--white:#FFFFFF;
+  --text:#1A3040;--subtle:#5A7080;--auto-bg:#E8F7F4;--auto-bd:#8FCFC8;
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{font-family:'DM Sans',sans-serif;font-size:14px;background:var(--mist);color:var(--text);min-height:100vh}
+.topbar{background:var(--ink);height:52px;display:flex;align-items:center;justify-content:space-between;padding:0 32px;border-bottom:2px solid var(--teal);position:sticky;top:0;z-index:100}
+.topbar-brand{display:flex;align-items:center;gap:10px}
+.ds-wordmark{color:var(--cyan);font-size:15px;font-weight:700;letter-spacing:3px;text-transform:uppercase}
+.topbar-sep{color:#334455;font-size:18px;margin:0 2px}
+.topbar-page{color:#7899AA;font-size:13px}
+.topbar-right{display:flex;align-items:center;gap:10px}
+.tier-badge{background:var(--teal);color:white;font-size:10px;font-weight:700;letter-spacing:1px;padding:3px 9px;border-radius:2px;text-transform:uppercase}
+.topbar-help{color:#7899AA;font-size:12px;border:1px solid #334455;padding:4px 12px;border-radius:2px}
+.progress-strip{background:var(--deep);padding:0 32px;display:flex;align-items:stretch;border-bottom:1px solid #1A4060}
+.prog-step{display:flex;align-items:center;gap:8px;padding:10px 16px 10px 0;opacity:.45;transition:opacity .2s}
+.prog-step.active{opacity:1}
+.prog-step.done{opacity:.7}
+.prog-step.done .pnum{background:var(--teal)}
+.prog-step.active .pnum{background:var(--cyan);color:var(--ink)}
+.pnum{width:20px;height:20px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:700;background:#1A3A50;color:#7899AA;flex-shrink:0;font-family:'DM Mono',monospace}
+.plabel{color:#A8C0CC;font-size:12px;white-space:nowrap}
+.prog-step.active .plabel{color:var(--cyan);font-weight:600}
+.prog-sep{color:#1A3A50;padding:0 4px;align-self:center;font-size:14px}
+.page{max-width:980px;margin:28px auto 60px;padding:0 20px}
+.section-block{margin-bottom:18px}
+.section-head{background:var(--deep);border-radius:5px 5px 0 0;padding:13px 20px;display:flex;align-items:center;gap:10px}
+.section-icon{font-size:16px}
+.section-label{color:var(--cyan);font-size:13px;font-weight:700;letter-spacing:.3px}
+.section-sub{color:#6899AA;font-size:11px;margin-left:auto}
+.section-body{background:var(--white);border:1px solid var(--border);border-top:none;border-radius:0 0 5px 5px;padding:22px}
+.grid{display:grid;gap:14px}
+.g2{grid-template-columns:1fr 1fr}
+.g3{grid-template-columns:1fr 1fr 1fr}
+.s2{grid-column:span 2}
+.s3{grid-column:span 3}
+@media(max-width:640px){.g2,.g3{grid-template-columns:1fr}.s2,.s3{grid-column:span 1}}
+.field{display:flex;flex-direction:column;gap:5px}
+.field label{font-size:11px;font-weight:600;color:var(--subtle);letter-spacing:.4px;text-transform:uppercase;display:flex;align-items:center;gap:5px}
+.field input,.field select,.field textarea{border:1.5px solid var(--border);border-radius:4px;padding:9px 12px;font-family:'DM Sans',sans-serif;font-size:14px;color:var(--text);background:var(--white);transition:border-color .15s,box-shadow .15s;width:100%}
+.field input:focus,.field select:focus,.field textarea:focus{outline:none;border-color:var(--teal);box-shadow:0 0 0 3px rgba(0,129,143,.1)}
+.field textarea{resize:vertical;min-height:80px;line-height:1.5}
+.field-hint{font-size:11px;color:var(--subtle);font-style:italic}
+
+hr.div{border:none;border-top:1px solid var(--mist);margin:16px 0}
+/* CHOICE BUTTONS */
+.choice-group{display:flex;flex-wrap:wrap;gap:8px;margin-top:2px}
+.choice-btn{display:flex;align-items:center;gap:8px;border:1.5px solid var(--border);border-radius:4px;padding:8px 14px;cursor:pointer;background:var(--white);transition:all .15s;font-size:13px;color:var(--subtle);user-select:none}
+.choice-btn:hover{border-color:var(--teal);color:var(--teal)}
+.choice-btn.selected{border-color:var(--teal);background:var(--auto-bg);color:var(--teal);font-weight:600}
+.choice-btn input{display:none}
+.c-dot{width:14px;height:14px;border-radius:50%;border:2px solid var(--border);flex-shrink:0;transition:all .15s;position:relative}
+.choice-btn.selected .c-dot{border-color:var(--teal);background:var(--teal)}
+.c-dot::after{content:'';width:5px;height:5px;border-radius:50%;background:white;position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);display:none}
+.choice-btn.selected .c-dot::after{display:block}
+.c-check{width:14px;height:14px;border-radius:3px;border:2px solid var(--border);flex-shrink:0;transition:all .15s;display:flex;align-items:center;justify-content:center;font-size:9px;color:white}
+.choice-btn.selected .c-check{border-color:var(--teal);background:var(--teal)}
+/* UPLOAD */
+.upload-zone{border:2px dashed var(--border);border-radius:6px;padding:36px 24px;text-align:center;background:var(--ghost);cursor:pointer;transition:all .2s}
+.upload-zone.drag,.upload-zone:hover{border-color:var(--teal);background:var(--auto-bg)}
+.upload-icon{font-size:36px;margin-bottom:10px}
+.upload-label{font-weight:600;color:var(--text);margin-bottom:4px}
+.upload-sub{font-size:12px;color:var(--subtle);margin-bottom:14px}
+.upload-btn{display:inline-block;background:var(--deep);color:var(--cyan);padding:8px 20px;border-radius:4px;font-size:13px;font-weight:700;cursor:pointer;transition:background .15s}
+.upload-btn:hover{background:var(--teal);color:white}
+.file-attached{margin-top:10px;background:var(--auto-bg);border:1.5px solid var(--auto-bd);border-radius:4px;padding:10px 14px;display:flex;align-items:center;gap:10px}
+.file-icon{font-size:20px}
+.file-name{font-weight:600;color:var(--teal);flex:1;font-size:13px}
+.file-size{color:var(--subtle);font-size:12px}
+.file-remove{background:none;border:none;color:var(--subtle);cursor:pointer;font-size:16px;padding:2px 6px;border-radius:3px;transition:all .15s}
+.file-remove:hover{background:var(--red);color:white}
+/* WARNING BLOCK */
+.warn-block{background:#FFF8E6;border:1.5px solid #F0C96A;border-radius:4px;padding:12px 16px;font-size:13px;color:#7A5A10;line-height:1.6;margin-bottom:18px}
+/* SUBMIT */
+.submit-bar{background:var(--white);border:1px solid var(--border);border-radius:5px;padding:18px 24px;display:flex;align-items:center;justify-content:space-between;gap:16px;flex-wrap:wrap;margin-top:4px}
+.submit-meta{font-size:13px;color:var(--subtle)}
+.submit-meta strong{color:var(--text)}
+.btn-submit{background:var(--teal);color:white;border:none;padding:13px 30px;border-radius:4px;font-family:'DM Sans',sans-serif;font-size:14px;font-weight:700;cursor:pointer;letter-spacing:.3px;transition:background .15s,transform .1s;display:flex;align-items:center;gap:8px}
+.btn-submit:hover{background:#006A78;transform:translateY(-1px)}
+.btn-submit:active{transform:translateY(0)}
+/* SUCCESS */
+#success{display:none;background:var(--white);border:1px solid var(--border);border-top:4px solid var(--green);border-radius:6px;padding:48px 32px;text-align:center}
+.success-check{width:64px;height:64px;border-radius:50%;background:var(--green);color:white;font-size:28px;display:flex;align-items:center;justify-content:center;margin:0 auto 20px}
+.success-title{font-size:22px;font-weight:700;color:var(--green);margin-bottom:6px}
+.success-sub{color:var(--subtle);font-size:14px;margin-bottom:24px;max-width:480px;margin-left:auto;margin-right:auto;line-height:1.6}
+.req-id{display:inline-block;background:var(--ink);color:var(--cyan);font-family:'DM Mono',monospace;font-size:20px;font-weight:500;padding:12px 28px;border-radius:4px;letter-spacing:2px;margin-bottom:28px}
+.email-card{background:var(--ghost);border:1px solid var(--border);border-radius:6px;padding:20px;text-align:left;max-width:640px;margin:0 auto 28px}
+.email-card h4{color:var(--deep);font-size:12px;font-weight:700;letter-spacing:.5px;text-transform:uppercase;padding-bottom:10px;border-bottom:1px solid var(--border);margin-bottom:12px;display:flex;align-items:center;gap:6px}
+.erow{display:flex;gap:8px;padding:5px 0;border-bottom:1px solid var(--border);font-size:13px}
+.erow:last-of-type{border-bottom:none}
+.ek{width:160px;flex-shrink:0;font-weight:600;color:var(--subtle);font-size:11px;text-transform:uppercase;letter-spacing:.3px;padding-top:2px}
+.ev{color:var(--text);flex:1;line-height:1.5}
+.btn-reset{background:none;border:2px solid var(--teal);color:var(--teal);padding:11px 24px;border-radius:4px;font-family:'DM Sans',sans-serif;font-size:14px;font-weight:700;cursor:pointer;transition:all .15s}
+.btn-reset:hover{background:var(--teal);color:white}
+.required-note{font-size:12px;color:var(--subtle);margin-bottom:16px;font-style:italic}
+</style>
+</head>
+<body>
+
+<div class="topbar">
+  <div class="topbar-brand">
+    <span class="ds-wordmark">Design Studio</span>
+    <span class="topbar-sep">›</span>
+    <span class="topbar-page">Bronze Brief — Production Request</span>
+  </div>
+  <div class="topbar-right">
+    <span class="tier-badge">🥉 Bronze</span>
+    <span class="topbar-help">Need help?</span>
+  </div>
+</div>
+
+<div class="progress-strip">
+  <div class="prog-step active" id="ps0"><div class="pnum">1</div><div class="plabel">Brief Details</div></div>
+  <div class="prog-sep">›</div>
+  <div class="prog-step" id="ps1"><div class="pnum">2</div><div class="plabel">Assignment</div></div>
+  <div class="prog-sep">›</div>
+  <div class="prog-step" id="ps2"><div class="pnum">3</div><div class="plabel">Production</div></div>
+  <div class="prog-sep">›</div>
+  <div class="prog-step" id="ps3"><div class="pnum">4</div><div class="plabel">Assets & Dates</div></div>
+  <div class="prog-sep">›</div>
+  <div class="prog-step" id="ps4"><div class="pnum">5</div><div class="plabel">Submit</div></div>
+</div>
+
+<div class="page">
+<div id="form-area">
+
+<div class="warn-block">⚠️ <strong>Studio work will not start until all necessary information is provided.</strong> This avoids gaps in understanding, fractured development and misaligned delivery. Production requests should include links to all electronic assets, any applicable brand guidelines and complete specifications on sizes and materials.</div>
+
+<div class="section-block">
+  <div class="section-head"><span class="section-icon">🏷️</span><span class="section-label">Section 1 — Brief Details</span><span class="section-sub">Brand & Category</span></div>
+  <div class="section-body">
+    <div class="grid g2">
+      <div class="field">
+        <label>Brand / Account Name</label>
+        <input type="text" id="f-brand" placeholder="e.g. Coca-Cola, Unilever, Nike…">
+      </div>
+      <div class="field">
+        <label>Category</label>
+        <input type="text" id="f-category" placeholder="e.g. Drinks; FMCG; Health & Beauty…">
+        <span class="field-hint">Describe the product/market category</span>
+      </div>
+      <div class="field">
+        <label>Assignment Name</label>
+        <input type="text" id="f-assignment" placeholder="Give this project a clear name">
+      </div>
+      <div class="field">
+        <label>Assignment Owner</label>
+        <input type="text" id="f-owner" placeholder="Enter your full name…">
+        <span class="field-hint">Select the person responsible for this brief</span>
+      </div>
+      <div class="field">
+        <label>Market Location</label>
+        <input type="text" id="f-market" placeholder="e.g. UK, South Africa, Germany…">
+      </div>
+      <div class="field">
+        <label>Division</label>
+        <div class="choice-group" id="division-group">
+          <label class="choice-btn" onclick="pickRadio(this,'division-group')"><input type="radio" name="division" value="Transactional"><span class="c-dot"></span>Transactional</label>
+          <label class="choice-btn" onclick="pickRadio(this,'division-group')"><input type="radio" name="division" value="Outsource"><span class="c-dot"></span>Outsource</label>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="section-block">
+  <div class="section-head"><span class="section-icon">📋</span><span class="section-label">Section 2 — Assignment Info</span><span class="section-sub">Your request</span></div>
+  <div class="section-body">
+    <div class="grid">
+      <div class="field">
+        <label>What is your request?</label>
+        <textarea id="f-request" style="min-height:110px" placeholder="Describe the full scope of work required. Include sizes, materials, specifications, quantities and any other relevant details…"></textarea>
+      </div>
+      <hr class="div">
+      <div class="field">
+        <label>Do you require a key visual for this assignment?</label>
+        <div class="choice-group" id="kv-group">
+          <label class="choice-btn" onclick="pickRadio(this,'kv-group')"><input type="radio" name="kv" value="Yes"><span class="c-dot"></span>Yes</label>
+          <label class="choice-btn" onclick="pickRadio(this,'kv-group')"><input type="radio" name="kv" value="No"><span class="c-dot"></span>No</label>
+        </div>
+      </div>
+      <div class="field">
+        <label>Do you require files to go to a production house / printers / factory?</label>
+        <div class="choice-group" id="pfiles-group">
+          <label class="choice-btn" onclick="pickRadio(this,'pfiles-group')"><input type="radio" name="pfiles" value="Yes"><span class="c-dot"></span>Yes</label>
+          <label class="choice-btn" onclick="pickRadio(this,'pfiles-group')"><input type="radio" name="pfiles" value="No"><span class="c-dot"></span>No</label>
+        </div>
+      </div>
+      <div class="field">
+        <label>Have you confirmed a factory / printers / production house?</label>
+        <div class="choice-group" id="factory-group">
+          <label class="choice-btn" onclick="pickRadio(this,'factory-group')"><input type="radio" name="factory" value="Yes — confirmed"><span class="c-dot"></span>Yes — confirmed</label>
+          <label class="choice-btn" onclick="pickRadio(this,'factory-group')"><input type="radio" name="factory" value="No — not yet"><span class="c-dot"></span>No — not yet</label>
+          <label class="choice-btn" onclick="pickRadio(this,'factory-group')"><input type="radio" name="factory" value="Not applicable"><span class="c-dot"></span>Not applicable</label>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="section-block">
+  <div class="section-head"><span class="section-icon">📎</span><span class="section-label">Section 3 — Assets & Timeline</span><span class="section-sub">Reference image & production start date</span></div>
+  <div class="section-body">
+    <div class="grid g2">
+      <div class="field s2">
+        <label>Reference Image</label>
+        <div class="upload-zone" id="ref-zone" onclick="document.getElementById('ref-input').click()" ondragover="dragOver(event,'ref-zone')" ondragleave="dragLeave('ref-zone')" ondrop="dropFile(event,'ref-input','ref-zone')">
+          <div class="upload-icon">🖼️</div>
+          <div class="upload-label">Upload reference image</div>
+          <div class="upload-sub">Drag & drop or click to browse · Images, PDF, AI, PSD accepted</div>
+          <span class="upload-btn">Browse files</span>
+        </div>
+        <input type="file" id="ref-input" style="display:none" accept="image/*,.pdf,.ai,.psd,.eps" onchange="handleFile(this,'ref-display','ref-zone')">
+        <div id="ref-display" style="display:none" class="file-attached">
+          <span class="file-icon">📎</span>
+          <span class="file-name" id="ref-name"></span>
+          <span class="file-size" id="ref-size"></span>
+          <button class="file-remove" onclick="removeFile('ref-input','ref-display','ref-zone')">✕</button>
+        </div>
+      </div>
+      <div class="field">
+        <label>Production Start Date</label>
+        <input type="date" id="f-prod-date">
+        <span class="field-hint">When do you require production to begin?</span>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="submit-bar">
+  <div class="submit-meta">Brief type: <strong>🥉 Bronze — Production Request</strong></div>
+  <button class="btn-submit" onclick="submitForm()">Submit Brief →</button>
+</div>
+
+</div>
+
+<div id="success" class="page" style="display:none">
+  <div class="success-check">✓</div>
+  <div class="success-title">Brief Submitted</div>
+  <div class="success-sub" id="success-sub">Your Production Request has been submitted to Design Studio.</div>
+  <div class="req-id" id="req-id-display"></div>
+  <div class="email-card" id="email-preview"></div>
+  <button class="btn-reset" onclick="resetForm()">+ Submit Another Brief</button>
+</div>
+
+</div>
+
+<script>
+const g = id => document.getElementById(id);
+function pickRadio(el, groupId) {
+  document.querySelectorAll('#'+groupId+' .choice-btn').forEach(b=>b.classList.remove('selected'));
+  el.classList.add('selected');
+  el.querySelector('input').checked=true;
+}
+function handleFile(input,displayId,zoneId){
+  const file=input.files[0];if(!file)return;
+  g(displayId).style.display='flex';g(zoneId).style.display='none';
+  g(displayId.replace('display','name')).textContent=file.name;
+  g(displayId.replace('display','size')).textContent=(file.size/1024).toFixed(0)+' KB';
+}
+function removeFile(inputId,displayId,zoneId){
+  g(inputId).value='';g(displayId).style.display='none';g(zoneId).style.display='block';
+}
+function dragOver(e,z){e.preventDefault();g(z).classList.add('drag');}
+function dragLeave(z){g(z).classList.remove('drag');}
+function dropFile(e,inputId,zoneId){
+  e.preventDefault();g(zoneId).classList.remove('drag');
+  const dt=e.dataTransfer;if(!dt.files.length)return;
+  const input=g(inputId);
+  Object.defineProperty(input,'files',{value:dt.files,configurable:true});
+  handleFile(input,inputId.replace('input','display'),zoneId);
+}
+function val(id){const el=g(id);return el?el.value.trim():'';}
+function rval(name){const r=document.querySelector(`input[name="${name}"]:checked`);return r?r.value:'';}
+function markErr(id){g(id)?.classList.add('err');}
+function clearErr(id){g(id)?.classList.remove('err');}
+
+function submitForm(){
+  try {
+    const now = new Date();
+    const rid = 'SI-' + now.getFullYear().toString().slice(2) + String(now.getMonth()+1).padStart(2,'0') + String(now.getDate()).padStart(2,'0') + '-' + Math.floor(Math.random()*9000+1000);
+    const refFile = g('ref-input') ? g('ref-input').files[0] : null;
+    const brandFile = g('brand-input') ? g('brand-input').files[0] : null;
+
+    const emailHtml = `
+      <h4>📧 Brief Summary — Design Studio Inbox Preview</h4>
+      <div class="erow"><span class="ek">Brief Type</span><span class="ev"><strong>🥉 Silver — Design Brief</strong></span></div>
+      <div class="erow"><span class="ek">Request ID</span><span class="ev"><strong>${rid}</strong></span></div>
+      <div class="erow"><span class="ek">Submitted</span><span class="ev">${now.toLocaleString('en-GB')}</span></div>
+      <div class="erow"><span class="ek">Brand / Account</span><span class="ev">${val('f-brand')}</span></div>
+      <div class="erow"><span class="ek">Category</span><span class="ev">${val('f-category')}</span></div>
+      <div class="erow"><span class="ek">Assignment</span><span class="ev">${val('f-assignment')}</span></div>
+      <div class="erow"><span class="ek">Owner</span><span class="ev">${val('f-owner')}</span></div>
+      <div class="erow"><span class="ek">Market</span><span class="ev">${val('f-market')}</span></div>
+      <div class="erow"><span class="ek">Division</span><span class="ev">${rval('division')}</span></div>
+      <div class="erow"><span class="ek">Request Details</span><span class="ev">${val('f-request')}</span></div>
+      
+    <div class="erow"><span class="ek">Design Requirements</span><span class="ev">${cvals('dreq')}</span></div>
+    <div class="erow"><span class="ek">Touchpoints</span><span class="ev">${cvals('touch')}</span></div>
+    <div class="erow"><span class="ek">Milestones</span><span class="ev">${cvals('milestone')}</span></div>
+    <div class="erow"><span class="ek">References</span><span class="ev">${refFile ? '📎 ' + refFile.name : 'None uploaded'}</span></div>
+    <div class="erow"><span class="ek">Brand Assets</span><span class="ev">${brandFile ? '📎 ' + brandFile.name : 'None uploaded'}</span></div>
+    `;
+
+    // Show success screen immediately
+    g('req-id-display').textContent = rid;
+    g('email-preview').innerHTML = emailHtml;
+    g('success-sub').textContent = 'Your Design Brief has been submitted to Design Studio.';
+    g('form-area').style.display = 'none';
+    g('success').style.display = 'block';
+    document.querySelectorAll('.prog-step').forEach(s => s.classList.add('done'));
+    window.scrollTo({top:0, behavior:'smooth'});
+
+    // Send to Basin in background
+    const fd = new FormData();
+    fd.append('_to', 'Michelle.Nienhuis@link-worldwide.com');
+    fd.append('_replyto', 'Michelle.Nienhuis@link-worldwide.com');
+    fd.append('_subject', `Design Studio Brief — Silver — Design Brief — ${val('f-assignment')} — ${rid}`);
+    fd.append('Request ID', rid);
+    fd.append('Brief Type', 'Silver — Design Brief');
+    fd.append('Submitted', now.toLocaleString('en-GB'));
+    fd.append('Brand / Account', val('f-brand'));
+    fd.append('Category', val('f-category'));
+    fd.append('Assignment Name', val('f-assignment'));
+    fd.append('Assignment Owner', val('f-owner'));
+    fd.append('Market Location', val('f-market'));
+    fd.append('Division', rval('division'));
+    fd.append('Request Details', val('f-request'));
+      if(refFile) fd.append('Creative References', refFile, refFile.name);
+  if(brandFile) fd.append('Brand Assets', brandFile, brandFile.name);
+
+    fetch('https://usebasin.com/f/b9aa1eec0290', {method:'POST', body:fd, headers:{Accept:'application/json'}})
+      .then(r => r.json())
+      .then(data => {
+        if(data.success) {
+          g('success-sub').textContent = '✅ Your Design Brief has been submitted to Design Studio. A confirmation email has been sent. Reference: ' + rid;
+        }
+      })
+      .catch(() => {
+        g('success-sub').textContent = '⚠️ Brief saved but email could not be sent. Please quote reference ' + rid + ' and contact Michelle.Nienhuis@link-worldwide.com.';
+      });
+
+  } catch(err) {
+    console.error('Submit error:', err);
+    alert('Something went wrong: ' + err.message + '. Please try again.');
+  }
+}
+
+function resetForm(){
+  g('form-area').style.display='block';g('success').style.display='none';
+  g('form-area').querySelectorAll('input,select,textarea').forEach(el=>{el.value='';el.classList.remove('err');});
+  document.querySelectorAll('.choice-btn').forEach(b=>b.classList.remove('selected'));
+  removeFile('ref-input','ref-display','ref-zone');
+  g('ref-zone').style.borderColor='';
+  document.querySelectorAll('.prog-step').forEach(s=>{s.classList.remove('done','active');});
+  g('ps0').classList.add('active');
+  window.scrollTo({top:0,behavior:'smooth'});
+}
+</script>
+</body>
+</html>

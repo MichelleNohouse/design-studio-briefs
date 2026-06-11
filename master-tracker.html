@@ -1,0 +1,389 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Master Tracker · Design Studio</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600;700&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root{
+  --ink:#001E2E;--deep:#003250;--teal:#00818F;--cyan:#5FEFCF;
+  --amber:#E09A20;--green:#22936A;--red:#C03828;--mist:#EBF3F7;
+  --border:#C5D8E4;--ghost:#F5F9FB;--white:#FFFFFF;
+  --text:#1A3040;--subtle:#5A7080;--auto-bg:#E8F7F4;--auto-bd:#8FCFC8;
+  --purple:#7A50CC;--orange:#D06820;
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{font-family:'DM Sans',sans-serif;font-size:14px;background:var(--mist);color:var(--text);min-height:100vh}
+/* TOPBAR */
+.topbar{background:var(--ink);height:52px;display:flex;align-items:center;justify-content:space-between;padding:0 32px;border-bottom:2px solid var(--teal);position:sticky;top:0;z-index:100}
+.topbar-brand{display:flex;align-items:center;gap:10px}
+.ds-wordmark{color:var(--cyan);font-size:15px;font-weight:700;letter-spacing:3px;text-transform:uppercase}
+.topbar-sep{color:#334455;font-size:18px;margin:0 2px}
+.topbar-page{color:#7899AA;font-size:13px}
+.topbar-right{display:flex;align-items:center;gap:8px;position:relative}
+.add-btn{background:var(--teal);color:white;border:none;padding:7px 16px;border-radius:3px;font-family:'DM Sans',sans-serif;font-size:13px;font-weight:700;cursor:pointer;display:flex;align-items:center;gap:6px;transition:background .15s}
+.add-btn:hover{background:#006A78}
+.add-menu{position:absolute;top:calc(100% + 8px);right:0;background:var(--ink);border:1px solid #1A3A50;border-radius:5px;min-width:230px;overflow:hidden;display:none;box-shadow:0 8px 32px rgba(0,0,0,.4);z-index:200}
+.add-menu.open{display:block}
+.add-menu a,.add-menu-item{display:flex;align-items:center;gap:12px;padding:12px 16px;cursor:pointer;transition:background .15s;text-decoration:none;color:var(--text)}
+.add-menu a:hover,.add-menu-item:hover{background:rgba(255,255,255,.05)}
+.menu-tier{font-size:10px;font-weight:700;letter-spacing:.5px;padding:2px 8px;border-radius:2px;text-transform:uppercase;white-space:nowrap}
+.menu-tier.bronze{background:rgba(205,127,50,.2);color:#E8A96A}
+.menu-tier.silver{background:rgba(158,163,168,.2);color:#C8CDD2}
+.menu-tier.gold{background:rgba(224,154,32,.2);color:#F0C96A}
+.menu-label{font-size:13px;color:var(--mist)}
+.menu-sub{font-size:11px;color:var(--subtle)}
+.menu-divider{border-top:1px solid #1A3A50}
+/* STATS */
+.stats-bar{background:var(--deep);border-bottom:1px solid #1A4060;padding:16px 32px}
+.stats-row{display:flex;gap:12px;flex-wrap:wrap}
+.stat-card{background:rgba(255,255,255,.05);border:1px solid #1A4060;border-radius:5px;padding:12px 20px;min-width:120px;flex:1}
+.stat-label{font-size:10px;font-weight:700;letter-spacing:.5px;text-transform:uppercase;color:#7899AA;margin-bottom:5px}
+.stat-value{font-family:'DM Mono',monospace;font-size:24px;font-weight:500;color:var(--cyan)}
+.stat-value.amber{color:var(--amber)}
+.stat-value.green{color:var(--green)}
+/* FILTERS */
+.filters-bar{background:var(--white);border-bottom:1px solid var(--border);padding:12px 32px;display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+.filter-label{font-size:11px;font-weight:700;color:var(--subtle);text-transform:uppercase;letter-spacing:.4px;white-space:nowrap}
+.filter-btn{border:1.5px solid var(--border);background:var(--ghost);color:var(--subtle);padding:5px 12px;border-radius:3px;font-family:'DM Sans',sans-serif;font-size:12px;font-weight:600;cursor:pointer;transition:all .15s}
+.filter-btn:hover{border-color:var(--teal);color:var(--teal)}
+.filter-btn.active{background:var(--teal);border-color:var(--teal);color:white}
+.search-wrap{margin-left:auto;position:relative}
+.search-wrap input{border:1.5px solid var(--border);border-radius:4px;padding:7px 12px 7px 30px;font-family:'DM Sans',sans-serif;font-size:13px;color:var(--text);outline:none;width:200px;background:var(--ghost);transition:border-color .15s}
+.search-wrap input:focus{border-color:var(--teal)}
+.search-icon{position:absolute;left:9px;top:50%;transform:translateY(-50%);color:var(--subtle);font-size:13px}
+/* TABLE */
+.table-wrap{padding:24px 32px 60px;overflow-x:auto}
+table{width:100%;border-collapse:collapse;min-width:860px;background:var(--white);border:1px solid var(--border);border-radius:5px;overflow:hidden}
+thead{background:var(--deep)}
+th{padding:10px 14px;text-align:left;font-size:11px;font-weight:700;letter-spacing:.5px;text-transform:uppercase;color:#7899AA;white-space:nowrap;cursor:pointer;user-select:none}
+th:hover{color:var(--cyan)}
+tbody tr{border-bottom:1px solid var(--border);transition:background .1s;cursor:pointer}
+tbody tr:hover{background:var(--ghost)}
+tbody tr:last-child{border-bottom:none}
+td{padding:12px 14px;font-size:13px;color:var(--text);vertical-align:middle}
+.td-mono{font-family:'DM Mono',monospace;font-size:12px;color:var(--subtle)}
+.td-name{font-weight:600}
+.td-muted{color:var(--subtle);font-size:12px}
+/* TIER BADGES */
+.tier-pill{display:inline-flex;align-items:center;gap:4px;padding:3px 9px;border-radius:2px;font-size:10px;font-weight:700;letter-spacing:.5px;text-transform:uppercase;white-space:nowrap}
+.tier-pill.bronze{background:rgba(205,127,50,.15);color:#C07820;border:1px solid rgba(205,127,50,.3)}
+.tier-pill.silver{background:rgba(158,163,168,.15);color:#6A7480;border:1px solid rgba(158,163,168,.3)}
+.tier-pill.gold{background:rgba(224,154,32,.15);color:#B07810;border:1px solid rgba(224,154,32,.3)}
+/* STATUS BADGES */
+.status-pill{display:inline-flex;align-items:center;gap:5px;padding:3px 9px;border-radius:2px;font-size:11px;font-weight:600;white-space:nowrap;cursor:pointer;transition:opacity .15s;border:1px solid transparent}
+.status-pill:hover{opacity:.75}
+.s-dot{width:6px;height:6px;border-radius:50%;flex-shrink:0}
+.s-new{background:rgba(74,144,226,.12);color:#3070C0;border-color:rgba(74,144,226,.3)}
+.s-new .s-dot{background:#3070C0}
+.s-inprogress{background:rgba(224,154,32,.12);color:#B07810;border-color:rgba(224,154,32,.3)}
+.s-inprogress .s-dot{background:#E09A20}
+.s-review{background:rgba(122,80,204,.12);color:#6A40B0;border-color:rgba(122,80,204,.3)}
+.s-review .s-dot{background:#7A50CC}
+.s-complete{background:rgba(34,147,106,.12);color:var(--green);border-color:rgba(34,147,106,.3)}
+.s-complete .s-dot{background:var(--green)}
+.s-onhold{background:rgba(192,56,40,.12);color:var(--red);border-color:rgba(192,56,40,.3)}
+.s-onhold .s-dot{background:var(--red)}
+/* EMPTY */
+.empty{text-align:center;padding:60px 20px;color:var(--subtle)}
+.empty-icon{font-size:40px;margin-bottom:12px;opacity:.5}
+.empty-title{font-size:16px;font-weight:700;color:var(--text);margin-bottom:6px;opacity:.6}
+.empty-desc{font-size:13px;line-height:1.6;max-width:340px;margin:0 auto}
+/* MODAL */
+.modal-overlay{display:none;position:fixed;inset:0;background:rgba(0,20,40,.65);z-index:300;align-items:center;justify-content:center;padding:20px}
+.modal-overlay.open{display:flex}
+.modal{background:var(--white);border:1px solid var(--border);border-radius:6px;max-width:640px;width:100%;max-height:90vh;overflow-y:auto;box-shadow:0 16px 60px rgba(0,20,40,.3)}
+.modal-head{padding:18px 24px;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;background:var(--white);z-index:10}
+.modal-head-title{font-size:15px;font-weight:700;color:var(--text)}
+.modal-close{background:none;border:1px solid var(--border);color:var(--subtle);width:28px;height:28px;border-radius:3px;cursor:pointer;font-size:15px;display:flex;align-items:center;justify-content:center;transition:all .15s}
+.modal-close:hover{border-color:var(--red);color:var(--red)}
+.modal-body{padding:22px 24px}
+.detail-row{display:flex;gap:8px;padding:7px 0;border-bottom:1px solid var(--mist);font-size:13px}
+.detail-row:last-child{border-bottom:none}
+.dk{width:150px;flex-shrink:0;font-weight:600;color:var(--subtle);font-size:11px;text-transform:uppercase;letter-spacing:.3px;padding-top:2px}
+.dv{color:var(--text);flex:1;line-height:1.5}
+.status-section{margin-top:20px;padding-top:20px;border-top:1px solid var(--border)}
+.status-section-label{font-size:11px;font-weight:700;letter-spacing:.5px;text-transform:uppercase;color:var(--subtle);margin-bottom:10px}
+.status-picker{display:flex;flex-wrap:wrap;gap:8px}
+.spick{border:1.5px solid var(--border);background:var(--ghost);color:var(--subtle);padding:7px 14px;border-radius:3px;font-family:'DM Sans',sans-serif;font-size:12px;font-weight:600;cursor:pointer;transition:all .15s}
+.spick:hover{border-color:var(--teal);color:var(--teal)}
+.spick.cur{border-color:var(--teal);background:var(--auto-bg);color:var(--teal)}
+.notes-section{margin-top:20px;padding-top:20px;border-top:1px solid var(--border)}
+.notes-section label{font-size:11px;font-weight:700;letter-spacing:.5px;text-transform:uppercase;color:var(--subtle);display:block;margin-bottom:8px}
+.notes-section textarea{width:100%;border:1.5px solid var(--border);border-radius:4px;padding:10px 12px;font-family:'DM Sans',sans-serif;font-size:13px;color:var(--text);resize:vertical;min-height:75px;outline:none;background:var(--ghost);transition:border-color .15s}
+.notes-section textarea:focus{border-color:var(--teal)}
+.modal-footer{padding:14px 24px;border-top:1px solid var(--border);display:flex;gap:10px;justify-content:flex-end}
+.btn-save{background:var(--teal);color:white;border:none;padding:9px 20px;border-radius:3px;font-family:'DM Sans',sans-serif;font-size:13px;font-weight:700;cursor:pointer;transition:background .15s}
+.btn-save:hover{background:#006A78}
+.btn-del{background:none;border:1px solid rgba(192,56,40,.3);color:var(--red);padding:9px 14px;border-radius:3px;font-family:'DM Sans',sans-serif;font-size:12px;font-weight:600;cursor:pointer;transition:all .15s}
+.btn-del:hover{background:rgba(192,56,40,.1)}
+/* MANUAL ADD */
+.manual-modal{background:var(--white);border:1px solid var(--border);border-radius:6px;max-width:500px;width:100%;max-height:90vh;overflow-y:auto;box-shadow:0 16px 60px rgba(0,20,40,.3)}
+.mfield{display:flex;flex-direction:column;gap:5px;margin-bottom:14px}
+.mfield label{font-size:11px;font-weight:600;color:var(--subtle);letter-spacing:.4px;text-transform:uppercase}
+.mfield input,.mfield select,.mfield textarea{border:1.5px solid var(--border);border-radius:4px;padding:9px 12px;font-family:'DM Sans',sans-serif;font-size:13px;color:var(--text);background:var(--ghost);outline:none;transition:border-color .15s;width:100%}
+.mfield input:focus,.mfield select:focus{border-color:var(--teal)}
+.mgrid{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+@media(max-width:480px){.mgrid{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+
+<div class="topbar">
+  <div class="topbar-brand">
+    <span class="ds-wordmark">Design Studio</span>
+    <span class="topbar-sep">›</span>
+    <span class="topbar-page">Master Tracker</span>
+  </div>
+  <div class="topbar-right">
+    <button class="add-btn" id="add-btn" onclick="toggleMenu()">+ New Brief</button>
+    <div class="add-menu" id="add-menu">
+      <a class="add-menu a" href="bronze-brief.html" target="_blank" style="display:flex;align-items:center;gap:12px;padding:12px 16px;text-decoration:none">
+        <span class="menu-tier bronze">🥉 Bronze</span>
+        <div><div class="menu-label">Production Request</div><div class="menu-sub">Low effort — production focused</div></div>
+      </a>
+      <a href="silver-brief.html" target="_blank" style="display:flex;align-items:center;gap:12px;padding:12px 16px;text-decoration:none;transition:background .15s" onmouseover="this.style.background='rgba(255,255,255,.05)'" onmouseout="this.style.background='transparent'">
+        <span class="menu-tier silver">🥈 Silver</span>
+        <div><div class="menu-label">Design Brief</div><div class="menu-sub">Medium effort — design led</div></div>
+      </a>
+      <a href="gold-brief.html" target="_blank" style="display:flex;align-items:center;gap:12px;padding:12px 16px;text-decoration:none;transition:background .15s" onmouseover="this.style.background='rgba(255,255,255,.05)'" onmouseout="this.style.background='transparent'">
+        <span class="menu-tier gold">🥇 Gold</span>
+        <div><div class="menu-label">Creative Conceptual</div><div class="menu-sub">High effort — conceptual</div></div>
+      </a>
+      <div class="menu-divider"></div>
+      <div class="add-menu-item" onclick="openManual()">
+        <span style="font-size:16px">✏️</span>
+        <div><div class="menu-label">Add Manually</div><div class="menu-sub">Log a brief from email or Basin</div></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="stats-bar">
+  <div class="stats-row">
+    <div class="stat-card"><div class="stat-label">Total Briefs</div><div class="stat-value" id="st-total">0</div></div>
+    <div class="stat-card"><div class="stat-label">🥉 Bronze</div><div class="stat-value" id="st-bronze">0</div></div>
+    <div class="stat-card"><div class="stat-label">🥈 Silver</div><div class="stat-value" id="st-silver">0</div></div>
+    <div class="stat-card"><div class="stat-label">🥇 Gold</div><div class="stat-value" id="st-gold">0</div></div>
+    <div class="stat-card"><div class="stat-label">In Progress</div><div class="stat-value amber" id="st-inprog">0</div></div>
+    <div class="stat-card"><div class="stat-label">Complete</div><div class="stat-value green" id="st-done">0</div></div>
+  </div>
+</div>
+
+<div class="filters-bar">
+  <span class="filter-label">Tier</span>
+  <button class="filter-btn active" onclick="setTier(this,'all')">All</button>
+  <button class="filter-btn" onclick="setTier(this,'bronze')">🥉 Bronze</button>
+  <button class="filter-btn" onclick="setTier(this,'silver')">🥈 Silver</button>
+  <button class="filter-btn" onclick="setTier(this,'gold')">🥇 Gold</button>
+  <span class="filter-label" style="margin-left:16px">Status</span>
+  <button class="filter-btn active" onclick="setStat(this,'all')">All</button>
+  <button class="filter-btn" onclick="setStat(this,'New')">New</button>
+  <button class="filter-btn" onclick="setStat(this,'In Progress')">In Progress</button>
+  <button class="filter-btn" onclick="setStat(this,'In Review')">In Review</button>
+  <button class="filter-btn" onclick="setStat(this,'Complete')">Complete</button>
+  <button class="filter-btn" onclick="setStat(this,'On Hold')">On Hold</button>
+  <div class="search-wrap">
+    <span class="search-icon">🔍</span>
+    <input type="text" id="search-in" placeholder="Search briefs…" oninput="render()">
+  </div>
+</div>
+
+<div class="table-wrap">
+  <table id="briefs-tbl">
+    <thead>
+      <tr>
+        <th onclick="sortBy('id')">Ref ID</th>
+        <th onclick="sortBy('tier')">Tier</th>
+        <th onclick="sortBy('brand')">Brand</th>
+        <th onclick="sortBy('assignment')">Assignment</th>
+        <th onclick="sortBy('owner')">Owner</th>
+        <th onclick="sortBy('market')">Market</th>
+        <th onclick="sortBy('status')">Status</th>
+        <th onclick="sortBy('submitted')">Submitted</th>
+        <th>Files</th>
+      </tr>
+    </thead>
+    <tbody id="tbl-body"></tbody>
+  </table>
+  <div id="empty-state" class="empty" style="display:none">
+    <div class="empty-icon">📋</div>
+    <div class="empty-title">No briefs yet</div>
+    <div class="empty-desc">Briefs submitted via Bronze, Silver or Gold forms will appear here. Use + New Brief to open a form or add one manually.</div>
+  </div>
+</div>
+
+<!-- DETAIL MODAL -->
+<div class="modal-overlay" id="detail-modal" onclick="closeDetail(event)">
+  <div class="modal" onclick="event.stopPropagation()">
+    <div class="modal-head">
+      <div class="modal-head-title" id="modal-title">Brief Details</div>
+      <button class="modal-close" onclick="closeDetail()">✕</button>
+    </div>
+    <div class="modal-body">
+      <div id="modal-content"></div>
+      <div class="status-section">
+        <div class="status-section-label">Update Status</div>
+        <div class="status-picker" id="status-picker"></div>
+      </div>
+      <div class="notes-section">
+        <label>Studio Notes</label>
+        <textarea id="modal-notes" placeholder="Add internal notes, feedback or progress updates…"></textarea>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn-del" onclick="deleteBrief()">Delete Brief</button>
+      <button class="btn-save" onclick="saveModal()">Save Changes</button>
+    </div>
+  </div>
+</div>
+
+<!-- MANUAL ADD MODAL -->
+<div class="modal-overlay" id="manual-modal" onclick="closeManual(event)">
+  <div class="manual-modal" onclick="event.stopPropagation()">
+    <div class="modal-head">
+      <div class="modal-head-title">Add Brief Manually</div>
+      <button class="modal-close" onclick="closeManual()">✕</button>
+    </div>
+    <div class="modal-body">
+      <p style="font-size:12px;color:var(--subtle);margin-bottom:16px">Log a brief received by email or from Basin into the tracker.</p>
+      <div class="mgrid">
+        <div class="mfield"><label>Brief Tier *</label>
+          <select id="m-tier">
+            <option value="">— Select tier —</option>
+            <option value="bronze">🥉 Bronze — Production Request</option>
+            <option value="silver">🥈 Silver — Design Brief</option>
+            <option value="gold">🥇 Gold — Creative Conceptual</option>
+          </select>
+        </div>
+        <div class="mfield"><label>Brand / Account *</label><input type="text" id="m-brand" placeholder="Brand name"></div>
+        <div class="mfield" style="grid-column:span 2"><label>Assignment Name *</label><input type="text" id="m-assignment" placeholder="Project / assignment name"></div>
+        <div class="mfield"><label>Assignment Owner</label>
+          <select id="m-owner">
+            <option value="">— Select —</option>
+            <option>Michelle Nienhuis</option>
+            <option>Account Manager 2</option>
+            <option>Account Manager 3</option>
+            <option>Account Manager 4</option>
+          </select>
+        </div>
+        <div class="mfield"><label>Market Location</label><input type="text" id="m-market" placeholder="e.g. UK, South Africa…"></div>
+        <div class="mfield"><label>Division</label>
+          <select id="m-division"><option value="">— Select —</option><option>Transactional</option><option>Outsource</option></select>
+        </div>
+        <div class="mfield"><label>Status</label>
+          <select id="m-status"><option value="New">New</option><option value="In Progress">In Progress</option><option value="In Review">In Review</option><option value="Complete">Complete</option><option value="On Hold">On Hold</option></select>
+        </div>
+      </div>
+      <div class="mfield"><label>Reference ID (leave blank to auto-generate)</label><input type="text" id="m-refid" placeholder="e.g. BR-250530-1234"></div>
+      <div class="mfield"><label>Notes</label><textarea id="m-notes" placeholder="Any notes from the brief…" style="border:1.5px solid var(--border);border-radius:4px;padding:9px 12px;font-family:'DM Sans',sans-serif;font-size:13px;color:var(--text);background:var(--ghost);outline:none;resize:vertical;min-height:70px;width:100%"></textarea></div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn-save" onclick="saveManual()">Add to Tracker</button>
+    </div>
+  </div>
+</div>
+
+<script>
+const g=id=>document.getElementById(id);
+let briefs=[],tierF='all',statF='all',sortK='submitted',sortD=-1,curId=null;
+const STATUSES=['New','In Progress','In Review','Complete','On Hold'];
+const SC={New:'s-new','In Progress':'s-inprogress','In Review':'s-review',Complete:'s-complete','On Hold':'s-onhold'};
+
+function load(){try{briefs=JSON.parse(localStorage.getItem('ds_briefs_v2')||'[]');}catch(e){briefs=[];}}
+function save(){localStorage.setItem('ds_briefs_v2',JSON.stringify(briefs));}
+
+function render(){
+  const q=g('search-in').value.toLowerCase();
+  let rows=briefs.filter(b=>{
+    if(tierF!=='all'&&b.tier!==tierF)return false;
+    if(statF!=='all'&&b.status!==statF)return false;
+    if(q&&![b.id,b.brand,b.assignment,b.owner,b.market,b.status].join(' ').toLowerCase().includes(q))return false;
+    return true;
+  }).sort((a,b)=>{const av=a[sortK]||'',bv=b[sortK]||'';return av<bv?-sortD:av>bv?sortD:0;});
+  const tbody=g('tbl-body');tbody.innerHTML='';
+  g('empty-state').style.display=rows.length?'none':'block';
+  rows.forEach(b=>{
+    const tr=document.createElement('tr');tr.onclick=()=>openDetail(b.id);
+    const tl=b.tier==='bronze'?'🥉 Bronze':b.tier==='silver'?'🥈 Silver':'🥇 Gold';
+    const sc=SC[b.status]||'s-new';
+    tr.innerHTML=`
+      <td class="td-mono">${b.id}</td>
+      <td><span class="tier-pill ${b.tier}">${tl}</span></td>
+      <td class="td-name">${esc(b.brand)}</td>
+      <td>${esc(b.assignment)}<br><span class="td-muted">${esc(b.division||'')}</span></td>
+      <td class="td-muted">${esc(b.owner||'—')}</td>
+      <td class="td-muted">${esc(b.market||'—')}</td>
+      <td><span class="status-pill ${sc}" onclick="event.stopPropagation();cycleStatus('${b.id}')"><span class="s-dot"></span>${b.status}</span></td>
+      <td class="td-muted">${fmtDate(b.submitted)}</td>
+      <td style="color:${b.hasFiles?'var(--teal)':'var(--subtle)';font-size:12px}">${b.hasFiles?'📎 Yes':'—'}</td>
+    `;
+    tbody.appendChild(tr);
+  });
+  updateStats();
+}
+
+function updateStats(){
+  g('st-total').textContent=briefs.length;
+  g('st-bronze').textContent=briefs.filter(b=>b.tier==='bronze').length;
+  g('st-silver').textContent=briefs.filter(b=>b.tier==='silver').length;
+  g('st-gold').textContent=briefs.filter(b=>b.tier==='gold').length;
+  g('st-inprog').textContent=briefs.filter(b=>b.status==='In Progress').length;
+  g('st-done').textContent=briefs.filter(b=>b.status==='Complete').length;
+}
+
+function esc(s){return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');}
+function fmtDate(iso){if(!iso)return'—';try{return new Date(iso).toLocaleDateString('en-GB',{day:'2-digit',month:'short',year:'numeric'});}catch(e){return iso;}}
+function setTier(btn,v){document.querySelectorAll('.filters-bar .filter-btn').forEach(b=>{if(['all','bronze','silver','gold'].includes(b.textContent.replace(/[^a-zA-Z]/g,'').toLowerCase())||b.textContent.trim()==='All')b.classList.remove('active');});btn.classList.add('active');tierF=v;render();}
+function setStat(btn,v){const statBtns=['All','New','In Progress','In Review','Complete','On Hold'];document.querySelectorAll('.filters-bar .filter-btn').forEach(b=>{if(statBtns.includes(b.textContent.trim()))b.classList.remove('active');});btn.classList.add('active');statF=v;render();}
+function sortBy(k){if(sortK===k)sortD*=-1;else{sortK=k;sortD=1;}render();}
+function cycleStatus(id){const b=briefs.find(x=>x.id===id);if(!b)return;b.status=STATUSES[(STATUSES.indexOf(b.status)+1)%STATUSES.length];save();render();}
+
+function toggleMenu(){g('add-menu').classList.toggle('open');}
+document.addEventListener('click',e=>{if(!g('add-btn').contains(e.target))g('add-menu').classList.remove('open');});
+
+function openDetail(id){
+  const b=briefs.find(x=>x.id===id);if(!b)return;curId=id;
+  const tl=b.tier==='bronze'?'🥉 Bronze — Production Request':b.tier==='silver'?'🥈 Silver — Design Brief':'🥇 Gold — Creative Conceptual';
+  g('modal-title').textContent=b.assignment||'Brief Details';
+  const fields=[['Reference ID',b.id],['Brief Tier',tl],['Submitted',fmtDate(b.submitted)],['Brand / Account',b.brand],['Category',b.category],['Assignment',b.assignment],['Owner',b.owner],['Market',b.market],['Division',b.division],['Status',b.status],['Files',b.hasFiles?'Yes':'No'],['Details',b.details]].filter(([,v])=>v);
+  g('modal-content').innerHTML=fields.map(([k,v])=>`<div class="detail-row"><span class="dk">${esc(k)}</span><span class="dv">${esc(v)}</span></div>`).join('');
+  g('status-picker').innerHTML=STATUSES.map(s=>`<button class="spick${s===b.status?' cur':''}" onclick="setModalStatus('${s}')">${s}</button>`).join('');
+  g('modal-notes').value=b.notes||'';
+  g('detail-modal').classList.add('open');
+}
+function setModalStatus(s){const b=briefs.find(x=>x.id===curId);if(b)b.status=s;g('status-picker').innerHTML=STATUSES.map(st=>`<button class="spick${st===s?' cur':''}" onclick="setModalStatus('${st}')">${st}</button>`).join('');}
+function saveModal(){const b=briefs.find(x=>x.id===curId);if(b){b.notes=g('modal-notes').value;save();render();}closeDetail();}
+function deleteBrief(){if(!confirm('Delete this brief? This cannot be undone.'))return;briefs=briefs.filter(x=>x.id!==curId);save();render();closeDetail();}
+function closeDetail(e){if(e&&e.target!==g('detail-modal'))return;g('detail-modal').classList.remove('open');curId=null;}
+
+function openManual(){g('add-menu').classList.remove('open');g('manual-modal').classList.add('open');}
+function closeManual(e){if(e&&e.target!==g('manual-modal'))return;g('manual-modal').classList.remove('open');}
+function saveManual(){
+  const tier=g('m-tier').value,brand=g('m-brand').value.trim(),asgn=g('m-assignment').value.trim();
+  if(!tier||!brand||!asgn){alert('Please fill in Tier, Brand and Assignment.');return;}
+  const now=new Date();
+  const pre=tier==='bronze'?'BR':tier==='silver'?'SI':'GO';
+  const rid=g('m-refid').value.trim()||pre+'-'+now.getFullYear().toString().slice(2)+String(now.getMonth()+1).padStart(2,'0')+String(now.getDate()).padStart(2,'0')+'-'+Math.floor(Math.random()*9000+1000);
+  briefs.unshift({id:rid,tier,brand,assignment:asgn,owner:g('m-owner').value,market:g('m-market').value,division:g('m-division').value,status:g('m-status').value,notes:g('m-notes').value,submitted:now.toISOString(),hasFiles:false,details:''});
+  save();render();g('manual-modal').classList.remove('open');
+  ['m-tier','m-brand','m-assignment','m-owner','m-market','m-division','m-refid','m-notes'].forEach(id=>{const el=g(id);if(el)el.value='';});
+  g('m-status').value='New';
+}
+
+function loadDemo(){
+  if(briefs.length>0)return;
+  briefs=[
+    {id:'BR-250528-4821',tier:'bronze',brand:'Coca-Cola',assignment:'Summer POS Display',owner:'Michelle Nienhuis',market:'UK',division:'Transactional',status:'In Progress',submitted:'2025-05-28T09:14:00',hasFiles:true,details:'Production request for retail POS display units.',notes:'Awaiting factory confirmation.'},
+    {id:'SI-250529-7203',tier:'silver',brand:'Unilever',assignment:'Dove Body Wash Relaunch Brochure',owner:'Account Manager 2',market:'South Africa',division:'Outsource',status:'In Review',submitted:'2025-05-29T11:30:00',hasFiles:true,details:'Design brief for brochure and poster suite.',notes:''},
+    {id:'GO-250527-1948',tier:'gold',brand:'Nike',assignment:'Q3 Campaign Concept',owner:'Michelle Nienhuis',market:'Germany',division:'Transactional',status:'New',submitted:'2025-05-27T15:00:00',hasFiles:false,details:'Full creative conceptual brief for Q3 campaign.',notes:'Kick-off meeting booked 3 June.'},
+    {id:'BR-250525-3310',tier:'bronze',brand:'Nestlé',assignment:'Kit Kat Shelf Label Update',owner:'Account Manager 3',market:'France',division:'Transactional',status:'Complete',submitted:'2025-05-25T08:20:00',hasFiles:true,details:'',notes:'Delivered and approved.'},
+  ];save();
+}
+
+load();loadDemo();render();
+</script>
+</body>
+</html>
