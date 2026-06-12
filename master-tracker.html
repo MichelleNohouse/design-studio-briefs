@@ -251,7 +251,7 @@ td{padding:12px 14px;font-size:13px;color:var(--text);vertical-align:middle}
       <p style="font-size:12px;color:var(--subtle);margin-bottom:16px">Log a brief received by email or from Basin into the tracker.</p>
       <div class="mgrid">
         <div class="mfield"><label>Brief Tier *</label>
-          <select id="m-tier">
+          <select id="m-tier" onchange="onTierChange()">
             <option value="">— Select tier —</option>
             <option value="bronze">🥉 Bronze — Production Request</option>
             <option value="silver">🥈 Silver — Design Brief</option>
@@ -277,8 +277,26 @@ td{padding:12px 14px;font-size:13px;color:var(--text);vertical-align:middle}
           <select id="m-status"><option value="New">New</option><option value="In Progress">In Progress</option><option value="In Review">In Review</option><option value="Complete">Complete</option><option value="On Hold">On Hold</option></select>
         </div>
       </div>
-      <div class="mfield"><label>Reference ID (leave blank to auto-generate)</label><input type="text" id="m-refid" placeholder="e.g. BR-250530-1234"></div>
-      <div class="mfield"><label>Notes</label><textarea id="m-notes" placeholder="Any notes from the brief…" style="border:1.5px solid var(--border);border-radius:4px;padding:9px 12px;font-family:'DM Sans',sans-serif;font-size:13px;color:var(--text);background:var(--ghost);outline:none;resize:vertical;min-height:70px;width:100%"></textarea></div>
+      <div class="mfield"><label>Job ID (leave blank to auto-generate)</label><input type="text" id="m-refid" placeholder="e.g. BR-250530-1234"></div>
+
+      <!-- SILVER FIELDS -->
+      <div id="silver-fields" style="display:none">
+        <p style="font-size:11px;font-weight:700;letter-spacing:.5px;text-transform:uppercase;color:var(--teal);margin-bottom:10px;padding-top:10px;border-top:1px solid var(--border)">🥈 Silver Fields</p>
+        <div class="mfield"><label>Design Requirements</label><input type="text" id="m-dreq" placeholder="e.g. Static 2D graphics, Animation…"></div>
+        <div class="mfield"><label>Touchpoints / Elements</label><input type="text" id="m-touch" placeholder="e.g. Poster / Flyer, Brochure, POS Materials…"></div>
+        <div class="mfield"><label>Milestones</label><input type="text" id="m-milestones" placeholder="e.g. Internal review, Client presentation date…"></div>
+      </div>
+
+      <!-- GOLD FIELDS -->
+      <div id="gold-fields" style="display:none">
+        <p style="font-size:11px;font-weight:700;letter-spacing:.5px;text-transform:uppercase;color:var(--teal);margin-bottom:10px;padding-top:10px;border-top:1px solid var(--border)">🥇 Gold Fields</p>
+        <div class="mfield"><label>Strategic Needs</label><input type="text" id="m-strategic" placeholder="e.g. Trend report, Strategic anchor, Idea / Theme…"></div>
+        <div class="mfield"><label>Design Requirements</label><input type="text" id="m-dreq-go" placeholder="e.g. Static 2D graphics, Animation…"></div>
+        <div class="mfield"><label>Kick-Off Meeting</label><input type="text" id="m-kickoff" placeholder="e.g. 2025-06-15 at 10:00"></div>
+        <div class="mfield"><label>Milestones</label><input type="text" id="m-milestones-go" placeholder="e.g. Internal review, Client presentation date…"></div>
+      </div>
+
+      <div class="mfield"><label>Brief Request</label><textarea id="m-notes" placeholder="Paste the brief request details here…" style="border:1.5px solid var(--border);border-radius:4px;padding:9px 12px;font-family:'DM Sans',sans-serif;font-size:13px;color:var(--text);background:var(--ghost);outline:none;resize:vertical;min-height:70px;width:100%"></textarea></div>
     </div>
     <div class="modal-footer">
       <button class="btn-save" onclick="saveManual()">Add to Tracker</button>
@@ -360,6 +378,12 @@ function deleteBrief(){if(!confirm('Delete this brief? This cannot be undone.'))
 function closeDetail(e){if(e&&e.target!==g('detail-modal'))return;g('detail-modal').classList.remove('open');curId=null;}
 
 function openManual(){g('add-menu').classList.remove('open');g('manual-modal').classList.add('open');}
+
+function onTierChange(){
+  const tier=g('m-tier').value;
+  g('silver-fields').style.display=tier==='silver'?'block':'none';
+  g('gold-fields').style.display=tier==='gold'?'block':'none';
+}
 function closeManual(e){if(e&&e.target!==g('manual-modal'))return;g('manual-modal').classList.remove('open');}
 function saveManual(){
   const tier=g('m-tier').value,brand=g('m-brand').value.trim(),asgn=g('m-assignment').value.trim();
@@ -367,10 +391,18 @@ function saveManual(){
   const now=new Date();
   const pre=tier==='bronze'?'BR':tier==='silver'?'SI':'GO';
   const rid=g('m-refid').value.trim()||pre+'-'+now.getFullYear().toString().slice(2)+String(now.getMonth()+1).padStart(2,'0')+String(now.getDate()).padStart(2,'0')+'-'+Math.floor(Math.random()*9000+1000);
-  briefs.unshift({id:rid,tier,brand,assignment:asgn,owner:g('m-owner').value,market:g('m-market').value,division:g('m-division').value,status:g('m-status').value,notes:g('m-notes').value,submitted:now.toISOString(),hasFiles:false,details:''});
+  const extraDetails = tier==='silver'
+    ? `Design Requirements: ${g('m-dreq').value} | Touchpoints: ${g('m-touch').value} | Milestones: ${g('m-milestones').value}`
+    : tier==='gold'
+    ? `Strategic Needs: ${g('m-strategic').value} | Design Requirements: ${g('m-dreq-go').value} | Kick-Off: ${g('m-kickoff').value} | Milestones: ${g('m-milestones-go').value}`
+    : '';
+
+  briefs.unshift({id:rid,tier,brand,assignment:asgn,owner:g('m-owner').value,market:g('m-market').value,division:g('m-division').value,status:g('m-status').value,notes:g('m-notes').value,submitted:now.toISOString(),hasFiles:false,details:extraDetails});
   save();render();g('manual-modal').classList.remove('open');
-  ['m-tier','m-brand','m-assignment','m-owner','m-market','m-division','m-refid','m-notes'].forEach(id=>{const el=g(id);if(el)el.value='';});
+  ['m-tier','m-brand','m-assignment','m-owner','m-market','m-division','m-refid','m-notes','m-dreq','m-touch','m-milestones','m-strategic','m-dreq-go','m-kickoff','m-milestones-go'].forEach(id=>{const el=g(id);if(el)el.value='';});
   g('m-status').value='New';
+  g('silver-fields').style.display='none';
+  g('gold-fields').style.display='none';
 }
 
 function loadDemo(){
