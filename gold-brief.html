@@ -184,9 +184,8 @@ body{font-family:'DM Sans',sans-serif;font-size:14px;background:var(--mist);colo
 <div class="section-block">
   <div class="section-head"><span class="section-icon">🤝</span><span class="section-label">Section 4 — Kick-Off Meeting</span><span class="section-sub">Select next available date & time</span></div>
   <div class="section-body">
-    <div class="grid g2">
-      <div class="field"><label>Kick-Off Date</label><input type="date" id="f-kickoff-date"></div>
-      <div class="field"><label>Kick-Off Time</label><input type="time" id="f-kickoff-time"></div>
+    <div class="grid">
+      <div class="field"><label>Kick-Off Date</label><input type="date" id="f-kickoff-date"><span class="field-hint">Select the next available date for the kick-off meeting with the creative team.</span></div>
     </div>
   </div>
 </div>
@@ -301,7 +300,7 @@ function submitForm(){
       <div class="erow"><span class="ek">Division</span><span class="ev">${rval('division')}</span></div>
       <div class="erow"><span class="ek">Strategic Needs</span><span class="ev">${cvals('strategic')}</span></div>
       <div class="erow"><span class="ek">Design Requirements</span><span class="ev">${cvals('dreq')}</span></div>
-      <div class="erow"><span class="ek">Kick-Off Meeting</span><span class="ev">${val('f-kickoff-date')} at ${val('f-kickoff-time')}</span></div>
+      <div class="erow"><span class="ek">Kick-Off Meeting</span><span class="ev">${val('f-kickoff-date') || 'Not set'}</span></div>
       <div class="erow"><span class="ek">Milestones</span><span class="ev">${cvals('milestone')}</span></div>
       <div class="erow"><span class="ek">References</span><span class="ev">${refFile?'📎 '+refFile.name:'None uploaded'}</span></div>
       <div class="erow"><span class="ek">Brand Assets</span><span class="ev">${brandFile?'📎 '+brandFile.name:'None uploaded'}</span></div>
@@ -324,7 +323,7 @@ function submitForm(){
     fd.append('Assignment Name',val('f-assignment'));fd.append('Assignment Owner',val('f-owner'));
     fd.append('Market Location',val('f-market'));fd.append('Division',rval('division'));
     fd.append('Strategic Needs',cvals('strategic'));fd.append('Design Requirements',cvals('dreq'));
-    fd.append('Kick-Off Meeting',val('f-kickoff-date')+' at '+val('f-kickoff-time'));
+    fd.append('Kick-Off Meeting', val('f-kickoff-date'));
     fd.append('Milestones',cvals('milestone'));fd.append('Request Details',val('f-request'));
     if(refFile)fd.append('Creative References',refFile,refFile.name);
     if(brandFile)fd.append('Brand Assets',brandFile,brandFile.name);
