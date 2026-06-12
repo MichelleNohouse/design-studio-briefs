@@ -298,6 +298,7 @@ function submitForm(){
     fd.append('Milestones',cvals('milestone'));fd.append('Request Details',val('f-request'));
     if(refFile)fd.append('Creative References',refFile,refFile.name);
     if(brandFile)fd.append('Brand Assets',brandFile,brandFile.name);
+    fd.append('Files Attached', (refFile || brandFile) ? 'Yes' : 'No');
     fetch('https://usebasin.com/f/b9aa1eec0290',{method:'POST',body:fd,headers:{Accept:'application/json'}})
       .then(r=>r.json()).then(data=>{if(data.success){g('success-sub').textContent='✅ Brief sent to Design Studio. A confirmation email has been sent. Job ID: '+rid;}})
       .catch(()=>{g('success-sub').textContent='⚠️ Brief saved but email could not be sent. Please quote Job ID '+rid+' and contact Michelle.Nienhuis@link-worldwide.com.';});
