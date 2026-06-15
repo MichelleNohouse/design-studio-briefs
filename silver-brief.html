@@ -146,22 +146,22 @@ hr.div{border:none;border-top:1px solid var(--mist);margin:16px 0}
     <div class="grid">
       <div class="field"><label>Design Requirements</label>
         <div class="choice-group" id="dreq-group">
-          <label class="choice-btn" onclick="toggleCheck(this)"><input type="checkbox" name="dreq" value="Static 2D graphics"><span class="c-check">✓</span>Static 2D graphics</label>
-          <label class="choice-btn" onclick="toggleCheck(this)"><input type="checkbox" name="dreq" value="3D"><span class="c-check">✓</span>3D</label>
-          <label class="choice-btn" onclick="toggleCheck(this)"><input type="checkbox" name="dreq" value="Animation"><span class="c-check">✓</span>Animation</label>
-          <label class="choice-btn" onclick="toggleCheck(this)"><input type="checkbox" name="dreq" value="Updating copy"><span class="c-check">✓</span>Updating copy</label>
-          <label class="choice-btn" onclick="toggleCheck(this)"><input type="checkbox" name="dreq" value="Other"><span class="c-check">✓</span>Other</label>
+          <label class="choice-btn" onclick="toggleCheck(event,this)"><input type="checkbox" name="dreq" value="Static 2D graphics"><span class="c-check">✓</span>Static 2D graphics</label>
+          <label class="choice-btn" onclick="toggleCheck(event,this)"><input type="checkbox" name="dreq" value="3D"><span class="c-check">✓</span>3D</label>
+          <label class="choice-btn" onclick="toggleCheck(event,this)"><input type="checkbox" name="dreq" value="Animation"><span class="c-check">✓</span>Animation</label>
+          <label class="choice-btn" onclick="toggleCheck(event,this)"><input type="checkbox" name="dreq" value="Updating copy"><span class="c-check">✓</span>Updating copy</label>
+          <label class="choice-btn" onclick="toggleCheck(event,this)"><input type="checkbox" name="dreq" value="Other"><span class="c-check">✓</span>Other</label>
         </div>
       </div>
       <div class="field"><label>Touchpoints / Elements</label>
         <div class="choice-group" id="touch-group">
-          <label class="choice-btn" onclick="toggleCheck(this)"><input type="checkbox" name="touch" value="Thumbnails"><span class="c-check">✓</span>Thumbnails</label>
-          <label class="choice-btn" onclick="toggleCheck(this)"><input type="checkbox" name="touch" value="Labelling"><span class="c-check">✓</span>Labelling</label>
-          <label class="choice-btn" onclick="toggleCheck(this)"><input type="checkbox" name="touch" value="Poster / Flyer"><span class="c-check">✓</span>Poster / Flyer</label>
-          <label class="choice-btn" onclick="toggleCheck(this)"><input type="checkbox" name="touch" value="Brochure"><span class="c-check">✓</span>Brochure</label>
-          <label class="choice-btn" onclick="toggleCheck(this)"><input type="checkbox" name="touch" value="Catalogue"><span class="c-check">✓</span>Catalogue</label>
-          <label class="choice-btn" onclick="toggleCheck(this)"><input type="checkbox" name="touch" value="POS Materials"><span class="c-check">✓</span>POS Materials</label>
-          <label class="choice-btn" onclick="toggleCheck(this)"><input type="checkbox" name="touch" value="Other"><span class="c-check">✓</span>Other</label>
+          <label class="choice-btn" onclick="toggleCheck(event,this)"><input type="checkbox" name="touch" value="Thumbnails"><span class="c-check">✓</span>Thumbnails</label>
+          <label class="choice-btn" onclick="toggleCheck(event,this)"><input type="checkbox" name="touch" value="Labelling"><span class="c-check">✓</span>Labelling</label>
+          <label class="choice-btn" onclick="toggleCheck(event,this)"><input type="checkbox" name="touch" value="Poster / Flyer"><span class="c-check">✓</span>Poster / Flyer</label>
+          <label class="choice-btn" onclick="toggleCheck(event,this)"><input type="checkbox" name="touch" value="Brochure"><span class="c-check">✓</span>Brochure</label>
+          <label class="choice-btn" onclick="toggleCheck(event,this)"><input type="checkbox" name="touch" value="Catalogue"><span class="c-check">✓</span>Catalogue</label>
+          <label class="choice-btn" onclick="toggleCheck(event,this)"><input type="checkbox" name="touch" value="POS Materials"><span class="c-check">✓</span>POS Materials</label>
+          <label class="choice-btn" onclick="toggleCheck(event,this)"><input type="checkbox" name="touch" value="Other"><span class="c-check">✓</span>Other</label>
         </div>
       </div>
       <div class="field"><label>What is your request?</label><textarea id="f-request" style="min-height:110px" placeholder="Describe the full scope of work. Include key art direction, messaging, format specifications, quantities and any other relevant details…"></textarea></div>
@@ -206,10 +206,10 @@ hr.div{border:none;border-top:1px solid var(--mist);margin:16px 0}
   <div class="section-head"><span class="section-icon">📅</span><span class="section-label">Section 4 — Milestones</span><span class="section-sub">Have you considered these in your planning with the client?</span></div>
   <div class="section-body">
     <div class="milestone-list">
-      <label class="milestone-card" onclick="toggleMilestone(this)"><input type="checkbox" name="milestone" value="Internal review"><div class="ms-box">✓</div><div><div class="ms-title">Internal Review</div><div class="ms-desc">With only the team — not to be shared with the client</div></div></label>
-      <label class="milestone-card" onclick="toggleMilestone(this)"><input type="checkbox" name="milestone" value="Feedback from sales team"><div class="ms-box">✓</div><div><div class="ms-title">Feedback from Sales Team</div><div class="ms-desc">Gather internal sales perspective before client review</div></div></label>
-      <label class="milestone-card" onclick="toggleMilestone(this)"><input type="checkbox" name="milestone" value="Second internal review — set up client presentation"><div class="ms-box">✓</div><div><div class="ms-title">Second Internal Review</div><div class="ms-desc">Set up a presentation meeting with the client</div></div></label>
-      <label class="milestone-card" onclick="toggleMilestone(this)"><input type="checkbox" name="milestone" value="Client presentation date"><div class="ms-box">✓</div><div><div class="ms-title">Client Presentation Date</div><div class="ms-desc">Scheduled date to present final work to the client</div></div></label>
+      <label class="milestone-card" onclick="toggleMilestone(event,this)"><input type="checkbox" name="milestone" value="Internal review"><div class="ms-box">✓</div><div><div class="ms-title">Internal Review</div><div class="ms-desc">With only the team — not to be shared with the client</div></div></label>
+      <label class="milestone-card" onclick="toggleMilestone(event,this)"><input type="checkbox" name="milestone" value="Feedback from sales team"><div class="ms-box">✓</div><div><div class="ms-title">Feedback from Sales Team</div><div class="ms-desc">Gather internal sales perspective before client review</div></div></label>
+      <label class="milestone-card" onclick="toggleMilestone(event,this)"><input type="checkbox" name="milestone" value="Second internal review — set up client presentation"><div class="ms-box">✓</div><div><div class="ms-title">Second Internal Review</div><div class="ms-desc">Set up a presentation meeting with the client</div></div></label>
+      <label class="milestone-card" onclick="toggleMilestone(event,this)"><input type="checkbox" name="milestone" value="Client presentation date"><div class="ms-box">✓</div><div><div class="ms-title">Client Presentation Date</div><div class="ms-desc">Scheduled date to present final work to the client</div></div></label>
     </div>
   </div>
 </div>
@@ -233,14 +233,14 @@ hr.div{border:none;border-top:1px solid var(--mist);margin:16px 0}
 <script>
 const g=id=>document.getElementById(id);
 function pickRadio(el,gid){document.querySelectorAll('#'+gid+' .choice-btn').forEach(b=>b.classList.remove('selected'));el.classList.add('selected');el.querySelector('input').checked=true;}
-function toggleCheck(el){
-  event.preventDefault();
+function toggleCheck(e,el){
+  e.preventDefault();
   const cb=el.querySelector('input[type=checkbox]');
   cb.checked=!cb.checked;
   el.classList.toggle('selected',cb.checked);
 }
-function toggleMilestone(el){
-  event.preventDefault();
+function toggleMilestone(e,el){
+  e.preventDefault();
   const cb=el.querySelector('input[type=checkbox]');
   cb.checked=!cb.checked;
   el.classList.toggle('selected',cb.checked);
