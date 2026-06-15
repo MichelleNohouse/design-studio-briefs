@@ -331,6 +331,30 @@ function submitForm(){
     fetch('https://usebasin.com/f/95be9b45216d',{method:'POST',body:fd,headers:{Accept:'application/json'}})
       .then(r=>r.json()).then(data=>{if(data.success){g('success-sub').textContent='✅ Brief sent to Design Studio. A confirmation email has been sent. Job ID: '+rid;}})
       .catch(()=>{g('success-sub').textContent='⚠️ Brief saved but email could not be sent. Please quote Job ID '+rid+' and contact Michelle.Nienhuis@link-worldwide.com.';});
+
+    // Send to Power Automate for SharePoint Master Tracker
+    const paPayload={
+      'Brief Type':'Gold — Creative Conceptual Brief',
+      'Brand / Account':val('f-brand'),
+      'Assignment Name':val('f-assignment'),
+      'Assignment Owner':val('f-owner'),
+      'Market Location':val('f-market'),
+      'Division':rval('division'),
+      'Request Details':val('f-request'),
+      'Request ID':rid,
+      'Submitted':now.toLocaleString('en-GB'),
+      'Design Requirements':cvals('dreq'),
+      'Touchpoints':'',
+      'Strategic Needs':cvals('strategic'),
+      'Milestones':cvals('milestone'),
+      'Kick-Off Meeting':val('f-kickoff-date'),
+      'Key Visual Required':'',
+      'Files to Production House':'',
+      'Factory Confirmed':'',
+      'Production Start Date':'',
+      'Files Attached':(refFile||brandFile)?'Yes':'No'
+    };
+    fetch('https://default21708defe553461984acf7d307c17e.76.environment.api.powerplatform.com:443/powerautomate/automations/direct/workflows/7ae09d599da34059a96277c0a6539d71/triggers/manual/paths/invoke?api-version=1&sp=%2Ftriggers%2Fmanual%2Frun&sv=1.0&sig=vSQ1PuhmP_zzUIMzsigrUe3xA6lT19cdgjY23CgJFqE',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(paPayload)}).catch(()=>{});
   }catch(err){alert('Something went wrong: '+err.message+'. Please try again.');}
 }
 
