@@ -360,7 +360,10 @@ function submitForm(){
 
 function resetForm(){
   g('form-area').style.display='block';g('success').style.display='none';
-  g('form-area').querySelectorAll('input,select,textarea').forEach(el=>{el.value='';});
+  g('form-area').querySelectorAll('input,select,textarea').forEach(el=>{
+    if(el.type==='checkbox'||el.type==='radio'){el.checked=false;}
+    else{el.value='';}
+  });
   document.querySelectorAll('.choice-btn,.milestone-card,.strategic-card').forEach(b=>b.classList.remove('selected'));
   removeFile('ref-input','ref-display','ref-zone');removeFile('brand-input','brand-display','brand-zone');
   document.querySelectorAll('.prog-step').forEach(s=>{s.classList.remove('done','active');});
