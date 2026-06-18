@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Brief System · Link</title>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@300;400;500;600;700;800&family=Archivo:wght@600;700;800;900&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root{
+  --navy:#0B2740; --navy-deep:#081D30; --navy-mid:#123A56;
+  --teal:#2FB8B0; --mint:#5FEFD8;
+  --bronze:#C2773D; --bronze-dark:#7A4A26;
+  --silver:#A9B4BD; --silver-dark:#5C6670;
+  --gold:#C9C530; --gold-dark:#8C8A1E;
+  --text:#F3F6F8; --muted:#A9BBC8; --faint:#5C7488;
+  --line: rgba(255,255,255,0.09);
+  --line-soft: rgba(255,255,255,0.05);
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{
+  font-family:'Manrope',sans-serif;
+  background:var(--navy-deep);
+  color:var(--text);
+  min-height:100vh;
+  -webkit-font-smoothing:antialiased;
+}
+body::before{
+  content:'';
+  position:fixed; inset:0;
+  background:
+    radial-gradient(ellipse 1000px 600px at 110% -10%, rgba(47,184,176,0.16), transparent 60%),
+    radial-gradient(ellipse 700px 500px at -10% 30%, rgba(47,184,176,0.08), transparent 60%);
+  pointer-events:none; z-index:0;
+}
+.wrap{position:relative;z-index:1;max-width:1120px;margin:0 auto;padding:0 32px}
+
+/* TOPBAR */
+.topbar{display:flex;align-items:center;justify-content:space-between;padding:30px 0;border-bottom:1px solid var(--line)}
+.brand-mark{display:flex;align-items:center;gap:8px}
+.logo-link{display:flex;align-items:center;font-family:'Archivo',sans-serif;font-weight:800;font-size:24px;letter-spacing:-1px;color:var(--text)}
+.logo-chevron{color:var(--mint);margin-left:1px}
+.brand-tag{font-size:11px;color:var(--faint);letter-spacing:.5px;border-left:1px solid var(--line);padding-left:12px;margin-left:6px;font-weight:500}
+.topbar-link{font-size:12px;color:var(--muted);text-decoration:none;display:flex;align-items:center;gap:6px;letter-spacing:.3px;transition:color .2s}
+.topbar-link:hover{color:var(--text)}
+
+/* HERO */
+.hero{padding:80px 0 60px}
+.hero-eyebrow{font-family:'DM Mono',monospace;font-size:11px;color:var(--mint);letter-spacing:2px;text-transform:uppercase;margin-bottom:22px;display:flex;align-items:center;gap:10px}
+.hero-eyebrow::before{content:'';width:22px;height:1px;background:var(--mint)}
+.hero h1{font-family:'Archivo',sans-serif;font-size:46px;font-weight:800;line-height:1.08;letter-spacing:-1px;max-width:700px;margin-bottom:18px}
+.hero p{font-size:16px;color:var(--muted);max-width:480px;line-height:1.7}
+
+/* TIERS */
+.tiers{display:grid;grid-template-columns:1fr 1fr 1fr;gap:1px;background:var(--line);border:1px solid var(--line);border-radius:16px;overflow:hidden;margin:52px 0 0}
+@media(max-width:860px){.tiers{grid-template-columns:1fr}}
+
+.tier{background:var(--navy);padding:0;position:relative;text-decoration:none;color:var(--text);display:flex;flex-direction:column;transition:background .35s ease}
+.tier:hover{background:var(--navy-mid)}
+
+.tier-photo{
+  height:140px;position:relative;overflow:hidden;
+  display:flex;align-items:flex-end;justify-content:center;
+  padding-bottom:0;
+}
+.tier-photo .block{
+  width:78px;height:78px;border-radius:3px;
+  transform:rotate(0deg);
+  box-shadow:0 12px 28px rgba(0,0,0,0.4);
+  position:relative;
+}
+.tier.bronze .tier-photo{background:linear-gradient(160deg,#0C3145 0%,#163E54 60%,#1B4A60 100%)}
+.tier.silver .tier-photo{background:linear-gradient(160deg,#0A2A3D 0%,#143A50 60%,#184558 100%)}
+.tier.gold   .tier-photo{background:linear-gradient(160deg,#1E2A12 0%,#33401A 60%,#3C4A1E 100%)}
+
+.tier.bronze .block{background:linear-gradient(135deg,#E0935A,var(--bronze) 55%,var(--bronze-dark))}
+.tier.silver .block{background:linear-gradient(135deg,#E2E8EC,var(--silver) 55%,var(--silver-dark))}
+.tier.gold   .block{background:linear-gradient(135deg,#E5E25E,var(--gold) 55%,var(--gold-dark))}
+
+.tier-body{padding:28px 28px 32px;display:flex;flex-direction:column;flex:1}
+
+.tier-rank{font-family:'Archivo',sans-serif;font-weight:900;font-size:26px;letter-spacing:-.5px;text-transform:uppercase;line-height:1;margin-bottom:2px}
+.tier.bronze .tier-rank{color:var(--bronze)}
+.tier.silver .tier-rank{color:var(--silver)}
+.tier.gold .tier-rank{color:var(--gold)}
+
+.tier-rank-sub{font-family:'Archivo',sans-serif;font-weight:700;font-size:26px;letter-spacing:6px;text-transform:uppercase;color:var(--text);line-height:1;margin-bottom:18px}
+
+.tier-when{font-size:11px;font-weight:700;letter-spacing:1px;text-transform:uppercase;color:var(--muted);margin-bottom:6px}
+.tier-when-detail{font-size:13.5px;font-weight:600;color:var(--text);margin-bottom:14px;line-height:1.4}
+.tier-desc{font-size:13px;color:var(--muted);line-height:1.65;margin-bottom:22px;flex:1}
+
+.tier-meta{display:flex;align-items:center;justify-content:space-between;padding-top:18px;border-top:1px solid var(--line-soft)}
+.tier-effort{font-size:11px;color:var(--faint);letter-spacing:.3px;text-transform:uppercase;font-family:'DM Mono',monospace}
+.tier-arrow{width:30px;height:30px;border-radius:50%;border:1px solid var(--line);display:flex;align-items:center;justify-content:center;font-size:14px;color:var(--text);transition:transform .25s ease, border-color .25s ease}
+.tier:hover .tier-arrow{transform:translateX(3px)}
+.tier.bronze:hover .tier-arrow{border-color:var(--bronze)}
+.tier.silver:hover .tier-arrow{border-color:var(--silver)}
+.tier.gold:hover .tier-arrow{border-color:var(--gold)}
+
+/* INFO ROW */
+.info-row{display:grid;grid-template-columns:1fr 1fr;gap:48px;padding:60px 0 52px;border-top:1px solid var(--line);margin-top:60px}
+@media(max-width:720px){.info-row{grid-template-columns:1fr;gap:32px}}
+.info-block h3{font-size:11px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:var(--mint);margin-bottom:14px}
+.info-block p{font-size:14.5px;color:var(--muted);line-height:1.75;max-width:440px}
+.info-block a{color:var(--text);text-decoration:underline;text-decoration-color:var(--line);text-underline-offset:3px}
+
+/* FOOTER */
+.footer{padding:26px 0 44px;border-top:1px solid var(--line);display:flex;align-items:center;justify-content:space-between;font-size:12px;color:var(--faint)}
+.footer-mark{font-family:'DM Mono',monospace;letter-spacing:1px}
+
+@media(max-width:600px){
+  .hero h1{font-size:32px}
+  .wrap{padding:0 20px}
+  .tier-rank, .tier-rank-sub{font-size:22px}
+}
+</style>
+</head>
+<body>
+
+<div class="wrap">
+
+  <div class="topbar">
+    <div class="brand-mark">
+      <span class="logo-link">link<span class="logo-chevron">〉</span></span>
+      <span class="brand-tag">Studio Briefing System</span>
+    </div>
+    <a class="topbar-link" href="https://link-worldwide.com" target="_blank">link-worldwide.com ↗</a>
+  </div>
+
+  <div class="hero">
+    <div class="hero-eyebrow">Internal · Creative Studio</div>
+    <h1>Brief the studio in three weights.</h1>
+    <p>Choose the tier that matches the work. Every brief routes straight to the studio and into the Master Tracker — no forms lost, no follow-up emails needed.</p>
+  </div>
+
+  <div class="tiers">
+
+    <a class="tier bronze" href="bronze-brief.html">
+      <div class="tier-photo"><div class="block"></div></div>
+      <div class="tier-body">
+        <div class="tier-rank">BRONZE</div>
+        <div class="tier-rank-sub">BRIEFS</div>
+        <div class="tier-when">When to use</div>
+        <div class="tier-when-detail">Minimal studio input</div>
+        <div class="tier-desc">Quick visuals to align with a client, develop reference images, or brief amends to existing artwork. Topline the product, brand, campaign and style you're after.</div>
+        <div class="tier-meta">
+          <span class="tier-effort">Low effort</span>
+          <span class="tier-arrow">→</span>
+        </div>
+      </div>
+    </a>
+
+    <a class="tier silver" href="silver-brief.html">
+      <div class="tier-photo"><div class="block"></div></div>
+      <div class="tier-body">
+        <div class="tier-rank">SILVER</div>
+        <div class="tier-rank-sub">BRIEFS</div>
+        <div class="tier-when">When to use</div>
+        <div class="tier-when-detail">Standard studio partnership</div>
+        <div class="tier-desc">A complete creative task from ideation to visuals, presentation, artwork and likely production. Fresh concepts within a known brand, deliverable and look &amp; feel.</div>
+        <div class="tier-meta">
+          <span class="tier-effort">Medium effort</span>
+          <span class="tier-arrow">→</span>
+        </div>
+      </div>
+    </a>
+
+    <a class="tier gold" href="gold-brief.html">
+      <div class="tier-photo"><div class="block"></div></div>
+      <div class="tier-body">
+        <div class="tier-rank">GOLD</div>
+        <div class="tier-rank-sub">BRIEFS</div>
+        <div class="tier-when">When to use</div>
+        <div class="tier-when-detail">Studio leadership</div>
+        <div class="tier-desc">A fresh creative opportunity needing strategic development of new concepts and an original presentation. Deliver the client background and set the opportunity.</div>
+        <div class="tier-meta">
+          <span class="tier-effort">High effort</span>
+          <span class="tier-arrow">→</span>
+        </div>
+      </div>
+    </a>
+
+  </div>
+
+  <div class="info-row">
+    <div class="info-block">
+      <h3>Not sure which tier?</h3>
+      <p>If the work needs a new idea before it needs a design, start at Gold. If the direction already exists and needs creative execution, Silver. If everything is decided and you just need it made, Bronze.</p>
+    </div>
+    <div class="info-block">
+      <h3>After you submit</h3>
+      <p>Every brief is logged automatically and tracked through to delivery. Questions about a brief in progress can go to <a href="mailto:Michelle.Nienhuis@link-worldwide.com">Michelle Nienhuis</a>, Traffic Manager.</p>
+    </div>
+  </div>
+
+  <div class="footer">
+    <span class="footer-mark">LINK — YOUR POSITIVE CHANGE PARTNER</span>
+    <span>Internal use only</span>
+  </div>
+
+</div>
+
+</body>
+</html>
