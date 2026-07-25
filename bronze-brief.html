@@ -82,6 +82,28 @@ hr.div{border:none;border-top:1px solid var(--mist);margin:16px 0}
 .ev{color:var(--text);flex:1;line-height:1.5}
 .btn-reset{background:none;border:2px solid var(--teal);color:var(--teal);padding:11px 24px;border-radius:4px;font-family:'DM Sans',sans-serif;font-size:14px;font-weight:700;cursor:pointer;transition:all .15s}
 .btn-reset:hover{background:var(--teal);color:white}
+
+.file-list-display{display:none;margin-top:10px;background:var(--auto-bg);border:1.5px solid var(--auto-bd);border-radius:4px;padding:10px 14px;}
+.file-item{display:flex;align-items:center;gap:10px;padding:5px 0;border-bottom:1px solid rgba(0,129,143,0.15);font-size:13px;}
+.file-item:last-of-type{border-bottom:none}
+.file-item .file-icon{font-size:16px;flex-shrink:0}
+.file-item .file-name{font-weight:600;color:var(--teal);flex:1}
+.file-item .file-size{color:var(--subtle);font-size:11px;white-space:nowrap}
+.file-list-display .file-remove{margin-top:8px;background:none;border:1px solid rgba(192,56,40,0.3);color:var(--red);cursor:pointer;font-size:12px;padding:4px 10px;border-radius:3px;transition:all .15s;width:100%}
+.file-list-display .file-remove:hover{background:rgba(192,56,40,0.1)}
+
+.owner-wrap{position:relative}
+.owner-input{width:100%;border:1.5px solid var(--border);border-radius:4px;padding:9px 12px;font-family:'DM Sans',sans-serif;font-size:14px;color:var(--text);background:var(--white);transition:border-color .15s,box-shadow .15s}
+.owner-input:focus{outline:none;border-color:var(--teal);box-shadow:0 0 0 3px rgba(0,129,143,.1)}
+.owner-dropdown{position:absolute;top:calc(100% + 4px);left:0;right:0;background:var(--white);border:1.5px solid var(--teal);border-radius:4px;box-shadow:0 4px 20px rgba(0,0,0,0.12);z-index:200;max-height:220px;overflow-y:auto;display:none}
+.owner-dropdown.open{display:block}
+.owner-option{padding:10px 14px;cursor:pointer;font-size:13px;color:var(--text);display:flex;flex-direction:column;gap:2px;border-bottom:1px solid var(--mist);transition:background .12s}
+.owner-option:last-child{border-bottom:none}
+.owner-option:hover{background:var(--auto-bg)}
+.owner-option-name{font-weight:600;color:var(--text)}
+.owner-option-email{font-size:11px;color:var(--subtle)}
+.owner-loading{padding:10px 14px;font-size:13px;color:var(--subtle);font-style:italic}
+.owner-selected{background:var(--auto-bg) !important;border-color:var(--teal) !important}
 </style>
 </head>
 <body>
@@ -134,7 +156,7 @@ hr.div{border:none;border-top:1px solid var(--mist);margin:16px 0}
   <div class="section-head"><span class="section-icon">📋</span><span class="section-label">Section 2 — Assignment Info</span><span class="section-sub">Your request</span></div>
   <div class="section-body">
     <div class="grid">
-      <div class="field"><label>What is your request?</label><textarea id="f-request" style="min-height:110px" placeholder="Describe the full scope of work required…"></textarea></div>
+      <div class="field"><label>What is your request?</label><textarea id="f-request" style="min-height:110px" placeholder="Describe the full scope of work required. Include sizes, materials, specifications, quantities and any other relevant details. Include links to any relevant presentations or decks (PowerPoint, Google Slides etc.) that may help the studio understand the brief…"></textarea></div>
       <hr class="div">
       <div class="field"><label>Do you require a key visual for this assignment?</label>
         <div class="choice-group" id="kv-group">
@@ -170,12 +192,8 @@ hr.div{border:none;border-top:1px solid var(--mist);margin:16px 0}
           <div class="upload-sub">Drag & drop or click to browse · Images, PDF, AI, PSD accepted</div>
           <span class="upload-btn">Browse files</span>
         </div>
-        <input type="file" id="ref-input" style="display:none" accept="image/*,.pdf,.ai,.psd,.eps" onchange="handleFile(this,'ref-display','ref-zone')">
-        <div id="ref-display" style="display:none" class="file-attached">
-          <span class="file-icon">📎</span><span class="file-name" id="ref-name"></span>
-          <span class="file-size" id="ref-size"></span>
-          <button class="file-remove" onclick="removeFile('ref-input','ref-display','ref-zone')">✕</button>
-        </div>
+        <input type="file" id="ref-input" style="display:none" accept="image/*,.pdf,.ai,.psd,.eps" multiple onchange="handleFile(this,'ref-display','ref-zone')">
+        <div id="ref-display" class="file-list-display"></div>
       </div>
       <div class="field"><label>Production Start Date</label><input type="date" id="f-prod-date"><span class="field-hint">When do you require production to begin?</span></div>
     </div>
@@ -201,19 +219,63 @@ hr.div{border:none;border-top:1px solid var(--mist);margin:16px 0}
 <script>
 const g=id=>document.getElementById(id);
 function pickRadio(el,gid){document.querySelectorAll('#'+gid+' .choice-btn').forEach(b=>b.classList.remove('selected'));el.classList.add('selected');el.querySelector('input').checked=true;}
-function handleFile(input,displayId,zoneId){const file=input.files[0];if(!file)return;g(displayId).style.display='flex';g(zoneId).style.display='none';g(displayId.replace('display','name')).textContent=file.name;g(displayId.replace('display','size')).textContent=(file.size/1024).toFixed(0)+' KB';}
-function removeFile(inputId,displayId,zoneId){g(inputId).value='';g(displayId).style.display='none';g(zoneId).style.display='block';}
-function dragOver(e,z){e.preventDefault();g(z).classList.add('drag');}
-function dragLeave(z){g(z).classList.remove('drag');}
-function dropFile(e,inputId,zoneId){e.preventDefault();g(zoneId).classList.remove('drag');const dt=e.dataTransfer;if(!dt.files.length)return;const input=g(inputId);Object.defineProperty(input,'files',{value:dt.files,configurable:true});handleFile(input,inputId.replace('input','display'),zoneId);}
+
+function handleFile(input, displayId, zoneId){
+  const files = Array.from(input.files);
+  if(!files.length) return;
+  const display = document.getElementById(displayId);
+  const zone = document.getElementById(zoneId);
+  zone.style.display = 'none';
+  display.style.display = 'block';
+  // Build file list
+  display.innerHTML = files.map((f,i) => `
+    <div class="file-item" id="${displayId}-item-${i}">
+      <span class="file-icon">📎</span>
+      <span class="file-name">${f.name}</span>
+      <span class="file-size">${(f.size/1024).toFixed(0)} KB</span>
+    </div>
+  `).join('') + `<button class="file-remove" onclick="removeFile('${input.id}','${displayId}','${zoneId}')">✕ Clear all</button>`;
+}
+
+function removeFile(inputId, displayId, zoneId){
+  document.getElementById(inputId).value = '';
+  const display = document.getElementById(displayId);
+  display.style.display = 'none';
+  display.innerHTML = '';
+  document.getElementById(zoneId).style.display = 'block';
+}
+
+function dragOver(e,z){e.preventDefault();document.getElementById(z).classList.add('drag');}
+function dragLeave(z){document.getElementById(z).classList.remove('drag');}
+function dropFile(e,inputId,zoneId){
+  e.preventDefault();
+  document.getElementById(zoneId).classList.remove('drag');
+  const dt = e.dataTransfer;
+  if(!dt.files.length) return;
+  const input = document.getElementById(inputId);
+  Object.defineProperty(input,'files',{value:dt.files,configurable:true});
+  handleFile(input, inputId.replace('input','display'), zoneId);
+}
 function val(id){const el=g(id);return el?el.value.trim():'';}
 function rval(name){const r=document.querySelector(`input[name="${name}"]:checked`);return r?r.value:'';}
 
-function submitForm(){
+function fileToBase64(file){
+  return new Promise((resolve,reject)=>{
+    if(!file){resolve(null);return;}
+    const reader=new FileReader();
+    reader.onload=()=>resolve({name:file.name,contentBytes:reader.result.split(',')[1],contentType:file.type});
+    reader.onerror=reject;
+    reader.readAsDataURL(file);
+  });
+}
+
+async function submitForm(){
   try{
     const now=new Date();
     const rid='BR-'+now.getFullYear().toString().slice(2)+String(now.getMonth()+1).padStart(2,'0')+String(now.getDate()).padStart(2,'0')+'-'+Math.floor(Math.random()*9000+1000);
     const refFile=g('ref-input')?g('ref-input').files[0]:null;
+    const refFiles=g('ref-input')?Array.from(g('ref-input').files):[];
+    const refFileData=refFiles.length?await fileToBase64(refFiles[0]):null;
     const emailHtml=`
       <h4>📧 Brief Summary — Design Studio</h4>
       <div class="erow"><span class="ek">Brief Type</span><span class="ev"><strong>🥉 Bronze — Production Request</strong></span></div>
@@ -277,7 +339,10 @@ function submitForm(){
       'Files to Production House':rval('pfiles'),
       'Factory Confirmed':rval('factory'),
       'Production Start Date':val('f-prod-date'),
-      'Files Attached':refFile?'Yes':'No'
+      'Files Attached':refFiles.length?'Yes':'No',
+      'RefFileName':refFileData?refFileData.name:'',
+      'RefFileContent':refFileData?refFileData.contentBytes:'',
+      'RefFileType':refFileData?refFileData.contentType:''
     };
     fetch('https://default21708defe553461984acf7d307c17e.76.environment.api.powerplatform.com:443/powerautomate/automations/direct/workflows/7ae09d599da34059a96277c0a6539d71/triggers/manual/paths/invoke?api-version=1&sp=%2Ftriggers%2Fmanual%2Frun&sv=1.0&sig=vSQ1PuhmP_zzUIMzsigrUe3xA6lT19cdgjY23CgJFqE',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(paPayload)}).catch(()=>{});
   }catch(err){alert('Something went wrong: '+err.message+'. Please try again.');}
@@ -291,9 +356,67 @@ function resetForm(){
   });
   document.querySelectorAll('.choice-btn').forEach(b=>b.classList.remove('selected'));
   removeFile('ref-input','ref-display','ref-zone');
+  if(g('brand-input')) removeFile('brand-input','brand-display','brand-zone');
   document.querySelectorAll('.prog-step').forEach(s=>{s.classList.remove('done','active');});
   g('ps0').classList.add('active');window.scrollTo({top:0,behavior:'smooth'});
 }
+
+// Directory Search — calls secure Cloudflare Worker proxy
+const WORKER_URL = 'YOUR_WORKER_URL_HERE';
+let ownerSearchTimer = null;
+
+async function searchOwner(query){
+  if(!query || query.length < 2) return [];
+  try{
+    const resp = await fetch(WORKER_URL + '?q=' + encodeURIComponent(query));
+    const data = await resp.json();
+    return data.value || [];
+  } catch(e){ return []; }
+}
+
+function initOwnerSearch(){
+  const input = document.getElementById('f-owner');
+  const dropdown = document.getElementById('owner-dropdown');
+  if(!input || !dropdown) return;
+
+  input.addEventListener('input', function(){
+    input.classList.remove('owner-selected');
+    clearTimeout(ownerSearchTimer);
+    const q = this.value.trim();
+    if(q.length < 2){ dropdown.classList.remove('open'); return; }
+    dropdown.innerHTML = '<div class="owner-loading">Searching directory…</div>';
+    dropdown.classList.add('open');
+    ownerSearchTimer = setTimeout(async () => {
+      const results = await searchOwner(q);
+      if(!results.length){
+        dropdown.innerHTML = '<div class="owner-loading">No matches found — try a different name</div>';
+        return;
+      }
+      dropdown.innerHTML = results.map(u =>
+        '<div class="owner-option" onclick="selectOwner(\'' + u.displayName.replace(/'/g,"\'") + '\',\'' + (u.mail||'').replace(/'/g,"\'") + '\')">' +
+        '<span class="owner-option-name">' + u.displayName + '</span>' +
+        '<span class="owner-option-email">' + (u.mail||'') + (u.jobTitle ? ' · ' + u.jobTitle : '') + '</span>' +
+        '</div>'
+      ).join('');
+    }, 350);
+  });
+
+  document.addEventListener('click', function(e){
+    if(!input.contains(e.target) && !dropdown.contains(e.target)){
+      dropdown.classList.remove('open');
+    }
+  });
+}
+
+function selectOwner(name, email){
+  const input = document.getElementById('f-owner');
+  const dropdown = document.getElementById('owner-dropdown');
+  input.value = name;
+  input.classList.add('owner-selected');
+  dropdown.classList.remove('open');
+}
+
+document.addEventListener('DOMContentLoaded', initOwnerSearch);
 </script>
 </body>
 </html>
