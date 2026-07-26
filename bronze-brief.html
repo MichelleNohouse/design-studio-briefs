@@ -344,7 +344,7 @@ async function submitForm(){
       'RefFileContent':refFileData?refFileData.contentBytes:'',
       'RefFileType':refFileData?refFileData.contentType:''
     };
-    fetch('https://link-directory-search.michelle-nienhuis.workers.dev/submit',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(paPayload)}).catch(()=>{});
+    fetch('https://default21708defe553461984acf7d307c17e.76.environment.api.powerplatform.com:443/powerautomate/automations/direct/cu/04/workflows/7ae09d599da34059a96277c0a6539d71/triggers/manual/paths/invoke?api-version=1&sp=%2Ftriggers%2Fmanual%2Frun&sv=1.0&sig=vSQ1PuhmP_zzUIMzsigrUe3xA6lT19cdgjY23CgJFqE',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(paPayload)}).catch(()=>{});
   }catch(err){alert('Something went wrong: '+err.message+'. Please try again.');}
 }
 
