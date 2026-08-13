@@ -140,7 +140,11 @@ hr.div{border:none;border-top:1px solid var(--mist);margin:16px 0}
       <div class="field"><label>Brand / Account Name</label><input type="text" id="f-brand" placeholder="e.g. Coca-Cola, Unilever, Nike…"></div>
       <div class="field"><label>Category</label><input type="text" id="f-category" placeholder="e.g. Drinks; FMCG; Health & Beauty…"><span class="field-hint">Describe the product/market category</span></div>
       <div class="field"><label>Assignment Name</label><input type="text" id="f-assignment" placeholder="Give this project a clear name"></div>
-      <div class="field"><label>Assignment Owner</label><input type="text" id="f-owner" placeholder="Enter your full name…"></div>
+      <div class="field"><label>Assignment Owner</label><div class="owner-wrap">
+          <input type="text" id="f-owner" class="owner-input" placeholder="Start typing your name…" autocomplete="off">
+          <div class="owner-dropdown" id="owner-dropdown"></div>
+        </div>
+        <span class="field-hint">Type at least 2 characters to search the company directory</span></div>
       <div class="field"><label>Market Location</label><input type="text" id="f-market" placeholder="e.g. UK, South Africa, Germany…"></div>
       <div class="field"><label>Division</label>
         <div class="choice-group" id="division-group">
