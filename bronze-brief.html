@@ -273,12 +273,35 @@ function fileToBase64(file){
   });
 }
 
+
+async function uploadFilesToSharePoint(jobId, files) {
+  if (!files || files.length === 0) return;
+  const uploadPromises = Array.from(files).map(async file => {
+    try {
+      const base64 = await fileToBase64(file);
+      if (!base64) return;
+      await fetch('https://link-directory-search.michelle-nienhuis.workers.dev/upload', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          jobId: jobId,
+          fileName: file.name,
+          fileContent: base64.contentBytes,
+          fileType: file.type || 'application/octet-stream'
+        })
+      });
+    } catch(e) { console.error('Upload failed for ' + file.name, e); }
+  });
+  await Promise.all(uploadPromises);
+}
+
 async function submitForm(){
   try{
     const now=new Date();
     const rid='BR-'+now.getFullYear().toString().slice(2)+String(now.getMonth()+1).padStart(2,'0')+String(now.getDate()).padStart(2,'0')+'-'+Math.floor(Math.random()*9000+1000);
     const refFile=g('ref-input')?g('ref-input').files[0]:null;
     const refFiles=g('ref-input')?Array.from(g('ref-input').files):[];
+    await uploadFilesToSharePoint(rid, g('ref-input')?.files);
     const refFileData=refFiles.length?await fileToBase64(refFiles[0]):null;
     const emailHtml=`
       <h4>📧 Brief Summary — Design Studio</h4>
