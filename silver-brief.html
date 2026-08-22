@@ -114,6 +114,8 @@ hr.div{border:none;border-top:1px solid var(--mist);margin:16px 0}
 .owner-option-email{font-size:11px;color:var(--subtle)}
 .owner-loading{padding:10px 14px;font-size:13px;color:var(--subtle);font-style:italic}
 .owner-selected{background:var(--auto-bg) !important;border-color:var(--teal) !important}
+.req{color:var(--teal);font-size:11px;margin-left:2px}
+.opt{color:var(--subtle);font-size:11px;font-weight:400;margin-left:4px}
 </style>
 </head>
 <body>
@@ -147,16 +149,32 @@ hr.div{border:none;border-top:1px solid var(--mist);margin:16px 0}
   <div class="section-head"><span class="section-icon">🏷️</span><span class="section-label">Section 1 — Brief Details</span><span class="section-sub">Brand & Assignment</span></div>
   <div class="section-body">
     <div class="grid g2">
-      <div class="field"><label>Brand / Account Name</label><input type="text" id="f-brand" placeholder="e.g. Coca-Cola, Unilever, Nike…"></div>
-      <div class="field"><label>Category</label><input type="text" id="f-category" placeholder="e.g. Drinks; FMCG; Health & Beauty…"><span class="field-hint">Describe the product/market category</span></div>
-      <div class="field"><label>Assignment Name</label><input type="text" id="f-assignment" placeholder="Give this project a clear name"></div>
+      <div class="field"><label>Client <span class="req">*</span></label><input type="text" id="f-brand" placeholder="e.g. Coca-Cola, Unilever, Nike…"></div>
+      <div class="field"><label>Brand <span class="req">*</span></label><input type="text" id="f-category" placeholder="e.g. Coca-Cola Classic, Dove, Air Max…"></div>
+      <div class="field"><label>Country <span class="req">*</span></label><input type="text" id="f-assignment" placeholder="e.g. United Kingdom, South Africa, Germany…"></div>
+      <div class="field"><label>Region <span class="req">*</span></label><input type="text" id="f-market" placeholder="e.g. EMEA, LATAM, Asia Pacific…"></div>
+      <div class="field"><label>Project Type <span class="req">*</span></label>
+        <div class="choice-group" id="project-type-group" style="flex-wrap:wrap;gap:8px">
+          <label class="choice-btn" onclick="pickRadio(this,'project-type-group')"><input type="radio" name="project-type" value="Artwork"><span class="c-dot"></span>Artwork</label>
+          <label class="choice-btn" onclick="pickRadio(this,'project-type-group')"><input type="radio" name="project-type" value="Branded Mock-Up"><span class="c-dot"></span>Branded Mock-Up</label>
+          <label class="choice-btn" onclick="pickRadio(this,'project-type-group')"><input type="radio" name="project-type" value="Catalogue"><span class="c-dot"></span>Catalogue</label>
+          <label class="choice-btn" onclick="pickRadio(this,'project-type-group')"><input type="radio" name="project-type" value="Concept / Ideation"><span class="c-dot"></span>Concept / Ideation</label>
+          <label class="choice-btn" onclick="pickRadio(this,'project-type-group')"><input type="radio" name="project-type" value="Image Editing / Resizing"><span class="c-dot"></span>Image Editing / Resizing</label>
+          <label class="choice-btn" onclick="pickRadio(this,'project-type-group')"><input type="radio" name="project-type" value="Labels"><span class="c-dot"></span>Labels</label>
+          <label class="choice-btn" onclick="pickRadio(this,'project-type-group')"><input type="radio" name="project-type" value="Newsletter"><span class="c-dot"></span>Newsletter</label>
+          <label class="choice-btn" onclick="pickRadio(this,'project-type-group')"><input type="radio" name="project-type" value="Other"><span class="c-dot"></span>Other</label>
+          <label class="choice-btn" onclick="pickRadio(this,'project-type-group')"><input type="radio" name="project-type" value="Pitch Deck"><span class="c-dot"></span>Pitch Deck</label>
+          <label class="choice-btn" onclick="pickRadio(this,'project-type-group')"><input type="radio" name="project-type" value="Point of Sale"><span class="c-dot"></span>Point of Sale</label>
+          <label class="choice-btn" onclick="pickRadio(this,'project-type-group')"><input type="radio" name="project-type" value="Presentation Tidy Up"><span class="c-dot"></span>Presentation Tidy Up</label>
+        </div>
+      </div>
+      <div class="field"><label>Connect / Flow Number <span class="opt">(optional)</span></label><input type="text" id="f-connect" placeholder="e.g. FL-12345…"></div>
       <div class="field"><label>Assignment Owner</label><div class="owner-wrap">
           <input type="text" id="f-owner" class="owner-input" placeholder="Start typing your name…" autocomplete="off">
           <div class="owner-dropdown" id="owner-dropdown"></div>
         </div>
         <span class="field-hint">Type at least 2 characters to search the company directory</span></div>
-      <div class="field"><label>Market Location</label><input type="text" id="f-market" placeholder="e.g. UK, South Africa, Germany…"></div>
-      <div class="field"><label>Division</label>
+      <div class="field"><label>Division <span class="req">*</span></label>
         <div class="choice-group" id="division-group">
           <label class="choice-btn" onclick="pickRadio(this,'division-group')"><input type="radio" name="division" value="Transactional"><span class="c-dot"></span>Transactional</label>
           <label class="choice-btn" onclick="pickRadio(this,'division-group')"><input type="radio" name="division" value="Outsource"><span class="c-dot"></span>Outsource</label>
@@ -170,26 +188,8 @@ hr.div{border:none;border-top:1px solid var(--mist);margin:16px 0}
   <div class="section-head"><span class="section-icon">✏️</span><span class="section-label">Section 2 — Design Scope</span><span class="section-sub">Requirements & touchpoints</span></div>
   <div class="section-body">
     <div class="grid">
-      <div class="field"><label>Design Requirements</label>
-        <div class="choice-group" id="dreq-group">
-          <label class="choice-btn" onclick="toggleCheck(event,this)"><input type="checkbox" name="dreq" value="Static 2D graphics"><span class="c-check">✓</span>Static 2D graphics</label>
-          <label class="choice-btn" onclick="toggleCheck(event,this)"><input type="checkbox" name="dreq" value="3D"><span class="c-check">✓</span>3D</label>
-          <label class="choice-btn" onclick="toggleCheck(event,this)"><input type="checkbox" name="dreq" value="Animation"><span class="c-check">✓</span>Animation</label>
-          <label class="choice-btn" onclick="toggleCheck(event,this)"><input type="checkbox" name="dreq" value="Updating copy"><span class="c-check">✓</span>Updating copy</label>
-          <label class="choice-btn" onclick="toggleCheck(event,this)"><input type="checkbox" name="dreq" value="Other"><span class="c-check">✓</span>Other</label>
-        </div>
-      </div>
-      <div class="field"><label>Touchpoints / Elements</label>
-        <div class="choice-group" id="touch-group">
-          <label class="choice-btn" onclick="toggleCheck(event,this)"><input type="checkbox" name="touch" value="Thumbnails"><span class="c-check">✓</span>Thumbnails</label>
-          <label class="choice-btn" onclick="toggleCheck(event,this)"><input type="checkbox" name="touch" value="Labelling"><span class="c-check">✓</span>Labelling</label>
-          <label class="choice-btn" onclick="toggleCheck(event,this)"><input type="checkbox" name="touch" value="Poster / Flyer"><span class="c-check">✓</span>Poster / Flyer</label>
-          <label class="choice-btn" onclick="toggleCheck(event,this)"><input type="checkbox" name="touch" value="Brochure"><span class="c-check">✓</span>Brochure</label>
-          <label class="choice-btn" onclick="toggleCheck(event,this)"><input type="checkbox" name="touch" value="Catalogue"><span class="c-check">✓</span>Catalogue</label>
-          <label class="choice-btn" onclick="toggleCheck(event,this)"><input type="checkbox" name="touch" value="POS Materials"><span class="c-check">✓</span>POS Materials</label>
-          <label class="choice-btn" onclick="toggleCheck(event,this)"><input type="checkbox" name="touch" value="Other"><span class="c-check">✓</span>Other</label>
-        </div>
-      </div>
+      
+      
       <div class="field"><label>What is your request?</label><textarea id="f-request" style="min-height:110px" placeholder="Describe the full scope of work. Include key art direction, messaging, format specifications, quantities and any other relevant details. Include links to any relevant presentations or decks (PowerPoint, Google Slides etc.) that may help the studio understand the brief…"></textarea></div>
     </div>
   </div>
@@ -223,11 +223,11 @@ hr.div{border:none;border-top:1px solid var(--mist);margin:16px 0}
 <div class="section-block">
   <div class="section-head"><span class="section-icon">📅</span><span class="section-label">Section 4 — Milestones</span><span class="section-sub">Have you considered these in your planning with the client?</span></div>
   <div class="section-body">
-    <div class="milestone-list">
-      <label class="milestone-card" onclick="toggleMilestone(event,this)"><input type="checkbox" name="milestone" value="Internal review"><div class="ms-box">✓</div><div><div class="ms-title">Internal Review</div><div class="ms-desc">With only the team — not to be shared with the client</div></div></label>
-      <label class="milestone-card" onclick="toggleMilestone(event,this)"><input type="checkbox" name="milestone" value="Feedback from sales team"><div class="ms-box">✓</div><div><div class="ms-title">Feedback from Sales Team</div><div class="ms-desc">Gather internal sales perspective before client review</div></div></label>
-      <label class="milestone-card" onclick="toggleMilestone(event,this)"><input type="checkbox" name="milestone" value="Second internal review — set up client presentation"><div class="ms-box">✓</div><div><div class="ms-title">Second Internal Review</div><div class="ms-desc">Set up a presentation meeting with the client</div></div></label>
-      <label class="milestone-card" onclick="toggleMilestone(event,this)"><input type="checkbox" name="milestone" value="Client presentation date"><div class="ms-box">✓</div><div><div class="ms-title">Client Presentation Date</div><div class="ms-desc">Scheduled date to present final work to the client</div></div></label>
+    <div class="grid g2">
+      <div class="field"><label>Internal Review Date</label><input type="date" id="f-milestone-internal"></div>
+      <div class="field"><label>Feedback from Sales Team Date</label><input type="date" id="f-milestone-feedback"></div>
+      <div class="field"><label>Second Internal Review Date</label><input type="date" id="f-milestone-second"></div>
+      <div class="field"><label>Client Presentation Date</label><input type="date" id="f-milestone-client"></div>
     </div>
   </div>
 </div>
@@ -359,9 +359,10 @@ async function submitForm(){
       <div class="erow"><span class="ek">Owner</span><span class="ev">${val('f-owner')}</span></div>
       <div class="erow"><span class="ek">Market</span><span class="ev">${val('f-market')}</span></div>
       <div class="erow"><span class="ek">Division</span><span class="ev">${rval('division')}</span></div>
-      <div class="erow"><span class="ek">Design Requirements</span><span class="ev">${cvals('dreq')}</span></div>
-      <div class="erow"><span class="ek">Touchpoints</span><span class="ev">${cvals('touch')}</span></div>
-      <div class="erow"><span class="ek">Milestones</span><span class="ev">${cvals('milestone')}</span></div>
+      <div class="erow"><span class="ek">Internal Review Date</span><span class="ev">${g('f-milestone-internal')?.value||'—'}</span></div>
+      <div class="erow"><span class="ek">Feedback from Sales Team Date</span><span class="ev">${g('f-milestone-feedback')?.value||'—'}</span></div>
+      <div class="erow"><span class="ek">Second Internal Review Date</span><span class="ev">${g('f-milestone-second')?.value||'—'}</span></div>
+      <div class="erow"><span class="ek">Client Presentation Date</span><span class="ev">${g('f-milestone-client')?.value||'—'}</span></div>
       <div class="erow"><span class="ek">References</span><span class="ev">${refFile?'📎 '+refFile.name:'None uploaded'}</span></div>
       <div class="erow"><span class="ek">Brand Assets</span><span class="ev">${brandFile?'📎 '+brandFile.name:'None uploaded'}</span></div>
       <div class="erow"><span class="ek">Request Details</span><span class="ev">${val('f-request')}</span></div>
@@ -379,11 +380,15 @@ async function submitForm(){
     fd.append('_subject',`Design Studio Brief — Silver Design Brief — ${val('f-assignment')} — ${rid}`);
     fd.append('Request ID',rid);fd.append('Brief Type','Silver — Design Brief');
     fd.append('Submitted',now.toLocaleString('en-GB'));
-    fd.append('Brand / Account',val('f-brand'));fd.append('Category',val('f-category'));
-    fd.append('Assignment Name',val('f-assignment'));fd.append('Assignment Owner',val('f-owner'));
-    fd.append('Market Location',val('f-market'));fd.append('Division',rval('division'));
-    fd.append('Design Requirements',cvals('dreq'));fd.append('Touchpoints',cvals('touch'));
-    fd.append('Milestones',cvals('milestone'));fd.append('Request Details',val('f-request'));
+    fd.append('Client',val('f-brand'));fd.append('Brand',val('f-category'));
+    fd.append('Country',val('f-assignment'));fd.append('Assignment Owner',val('f-owner'));
+    fd.append('Project Type',rval('project-type'));
+    fd.append('Connect / Flow Number',val('f-connect'));
+    fd.append('Region',val('f-market'));fd.append('Division',rval('division'));
+    fd.append('Internal Review Date',document.getElementById('f-milestone-internal')?.value||'');
+    fd.append('Feedback from Sales Team Date',document.getElementById('f-milestone-feedback')?.value||'');
+    fd.append('Second Internal Review Date',document.getElementById('f-milestone-second')?.value||'');
+    fd.append('Client Presentation Date',document.getElementById('f-milestone-client')?.value||'');fd.append('Request Details',val('f-request'));
     if(refFile)fd.append('Creative References',refFile,refFile.name);
     if(brandFile)fd.append('Brand Assets',brandFile,brandFile.name);
     fd.append('Files Attached', (refFile || brandFile) ? 'Yes' : 'No');
@@ -394,18 +399,21 @@ async function submitForm(){
     // Send to Power Automate for SharePoint Master Tracker
     const paPayload={
       'Brief Type':'Silver — Design Brief',
-      'Brand / Account':val('f-brand'),
-      'Assignment Name':val('f-assignment'),
+      'Client':val('f-brand'),
+      'Country':val('f-assignment'),
       'Assignment Owner':val('f-owner'),
-      'Market Location':val('f-market'),
+      'Region':val('f-market'),
+      'Project Type':rval('project-type'),
+      'Connect / Flow Number':val('f-connect'),
       'Division':rval('division'),
       'Request Details':val('f-request'),
       'Request ID':rid,
       'Submitted':now.toISOString(),
-      'Design Requirements':cvals('dreq'),
-      'Touchpoints':cvals('touch'),
       'Strategic Needs':'',
-      'Milestones':cvals('milestone'),
+      'Internal Review Date':document.getElementById('f-milestone-internal')?.value||'',
+      'Feedback from Sales Team Date':document.getElementById('f-milestone-feedback')?.value||'',
+      'Second Internal Review Date':document.getElementById('f-milestone-second')?.value||'',
+      'Client Presentation Date':document.getElementById('f-milestone-client')?.value||'',
       'Kick-Off Meeting':'',
       'Key Visual Required':'',
       'Files to Production House':'',
