@@ -183,7 +183,7 @@ body{font-family:'DM Sans',sans-serif;font-size:14px;background:var(--mist);colo
         </div>
       </div>
       <div class="field"><label>Connect / Flow Number <span class="opt">(optional)</span></label><input type="text" id="f-connect" placeholder="e.g. FL-12345…"></div>
-      <div class="field"><label>Country Owner</label><div class="owner-wrap">
+      <div class="field"><label>Assignment Owner</label><div class="owner-wrap">
           <input type="text" id="f-owner" class="owner-input" placeholder="Start typing your name…" autocomplete="off">
           <div class="owner-dropdown" id="owner-dropdown"></div>
         </div>
@@ -424,7 +424,7 @@ async function submitForm(){
     fd.append('Request ID',rid);fd.append('Brief Type','Gold — Creative Conceptual Brief');
     fd.append('Submitted',now.toLocaleString('en-GB'));
     fd.append('Client',val('f-brand'));fd.append('Brand',val('f-category'));
-    fd.append('Country',val('f-assignment'));fd.append('Country Owner',val('f-owner'));
+    fd.append('Country',val('f-assignment'));fd.append('Assignment Owner',val('f-owner'));
     fd.append('Assignment Name',val('f-assignment-name'));
     fd.append('Project Type',rval('project-type'));
     fd.append('Connect / Flow Number',val('f-connect'));
@@ -448,7 +448,7 @@ async function submitForm(){
       'Brand':val('f-category'),
       'Country':val('f-assignment'),
       'Country Name':val('f-assignment'),
-      'Country Owner':val('f-owner'),
+      'Assignment Owner':val('f-owner'),
       'Region':val('f-market'),
       'Assignment Name':val('f-assignment-name'),
       'Project Type':rval('project-type'),
