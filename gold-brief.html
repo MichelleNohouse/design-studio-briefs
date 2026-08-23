@@ -380,8 +380,9 @@ async function submitForm(){
     const refFile=g('ref-input')?g('ref-input').files[0]:null;
     const brandFile=g('brand-input')?g('brand-input').files[0]:null;
     const refFiles=g('ref-input')?Array.from(g('ref-input').files):[];
-    await uploadFilesToSharePoint(rid, g('ref-input')?.files);
-    await uploadFilesToSharePoint(rid, g('brand-input')?.files);
+    // File uploads run after submission — non-blocking
+    uploadFilesToSharePoint(rid, g('ref-input')?.files).catch(e=>console.warn('File upload failed:',e));
+    uploadFilesToSharePoint(rid, g('brand-input')?.files).catch(e=>console.warn('File upload failed:',e));
     const refFileData=refFiles.length?await fileToBase64(refFiles[0]):null;
     const brandFiles=g('brand-input')?Array.from(g('brand-input').files):[];
     const brandFileData=brandFiles.length?await fileToBase64(brandFiles[0]):null;
