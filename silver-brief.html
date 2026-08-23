@@ -116,6 +116,7 @@ hr.div{border:none;border-top:1px solid var(--mist);margin:16px 0}
 .owner-selected{background:var(--auto-bg) !important;border-color:var(--teal) !important}
 .req{color:var(--teal);font-size:11px;margin-left:2px}
 .opt{color:var(--subtle);font-size:11px;font-weight:400;margin-left:4px}
+.submit-hint{font-size:12px;color:var(--subtle);text-align:center;margin-top:10px;font-style:italic}
 </style>
 </head>
 <body>
@@ -146,13 +147,14 @@ hr.div{border:none;border-top:1px solid var(--mist);margin:16px 0}
 <p style="font-size:13px;color:var(--subtle);margin-bottom:18px;line-height:1.6">Sets out the requirements for creative marketing materials — posters, catalogues, brochures, POS materials etc. Include key art, structural messaging, format specifications, deadlines and any assets or references to aid development.</p>
 
 <div class="section-block">
-  <div class="section-head"><span class="section-icon">🏷️</span><span class="section-label">Section 1 — Brief Details</span><span class="section-sub">Brand & Assignment</span></div>
+  <div class="section-head"><span class="section-icon">🏷️</span><span class="section-label">Section 1 — Brief Details</span><span class="section-sub">Brand & Country</span></div>
   <div class="section-body">
     <div class="grid g2">
       <div class="field"><label>Client <span class="req">*</span></label><input type="text" id="f-brand" placeholder="e.g. Coca-Cola, Unilever, Nike…"></div>
       <div class="field"><label>Brand <span class="req">*</span></label><input type="text" id="f-category" placeholder="e.g. Coca-Cola Classic, Dove, Air Max…"></div>
       <div class="field"><label>Country <span class="req">*</span></label><input type="text" id="f-assignment" placeholder="e.g. United Kingdom, South Africa, Germany…"></div>
       <div class="field"><label>Region <span class="req">*</span></label><input type="text" id="f-market" placeholder="e.g. EMEA, LATAM, Asia Pacific…"></div>
+      <div class="field"><label>Assignment Name <span class="req">*</span></label><input type="text" id="f-assignment-name" placeholder="Give this project a clear name…"></div>
       <div class="field"><label>Project Type <span class="req">*</span></label>
         <div class="choice-group" id="project-type-group" style="flex-wrap:wrap;gap:8px">
           <label class="choice-btn" onclick="pickRadio(this,'project-type-group')"><input type="radio" name="project-type" value="Artwork"><span class="c-dot"></span>Artwork</label>
@@ -169,7 +171,7 @@ hr.div{border:none;border-top:1px solid var(--mist);margin:16px 0}
         </div>
       </div>
       <div class="field"><label>Connect / Flow Number <span class="opt">(optional)</span></label><input type="text" id="f-connect" placeholder="e.g. FL-12345…"></div>
-      <div class="field"><label>Assignment Owner</label><div class="owner-wrap">
+      <div class="field"><label>Country Owner</label><div class="owner-wrap">
           <input type="text" id="f-owner" class="owner-input" placeholder="Start typing your name…" autocomplete="off">
           <div class="owner-dropdown" id="owner-dropdown"></div>
         </div>
@@ -235,6 +237,7 @@ hr.div{border:none;border-top:1px solid var(--mist);margin:16px 0}
 <div class="submit-bar">
   <div class="submit-meta">Brief type: <strong>🥈 Silver — Design Brief</strong></div>
   <button class="btn-submit" onclick="submitForm()">Submit Brief →</button>
+  <p class="submit-hint">Please click once only — larger files may take up to 10 seconds to submit. Please wait.</p>
 </div>
 </div>
 
@@ -354,11 +357,11 @@ async function submitForm(){
       <div class="erow"><span class="ek">Brief Type</span><span class="ev"><strong>🥈 Silver — Design Brief</strong></span></div>
       <div class="erow"><span class="ek">Job ID</span><span class="ev"><strong>${rid}</strong></span></div>
       <div class="erow"><span class="ek">Submitted</span><span class="ev">${now.toLocaleString('en-GB')}</span></div>
-      <div class="erow"><span class="ek">Brand / Account</span><span class="ev">${val('f-brand')}</span></div>
-      <div class="erow"><span class="ek">Category</span><span class="ev">${val('f-category')}</span></div>
-      <div class="erow"><span class="ek">Assignment</span><span class="ev">${val('f-assignment')}</span></div>
-      <div class="erow"><span class="ek">Owner</span><span class="ev">${val('f-owner')}</span></div>
-      <div class="erow"><span class="ek">Market</span><span class="ev">${val('f-market')}</span></div>
+      <div class="erow"><span class="ek">Client</span><span class="ev">${val('f-brand')}</span></div>
+      <div class="erow"><span class="ek">Brand</span><span class="ev">${val('f-category')}</span></div>
+      <div class="erow"><span class="ek">Country</span><span class="ev">${val('f-assignment')}</span></div>
+      <div class="erow"><span class="ek">Assignment Owner</span><span class="ev">${val('f-owner')}</span></div>
+      <div class="erow"><span class="ek">Region</span><span class="ev">${val('f-market')}</span></div>
       <div class="erow"><span class="ek">Division</span><span class="ev">${rval('division')}</span></div>
       <div class="erow"><span class="ek">Internal Review Date</span><span class="ev">${g('f-milestone-internal')?.value||'—'}</span></div>
       <div class="erow"><span class="ek">Feedback from Sales Team Date</span><span class="ev">${g('f-milestone-feedback')?.value||'—'}</span></div>
@@ -382,7 +385,8 @@ async function submitForm(){
     fd.append('Request ID',rid);fd.append('Brief Type','Silver — Design Brief');
     fd.append('Submitted',now.toLocaleString('en-GB'));
     fd.append('Client',val('f-brand'));fd.append('Brand',val('f-category'));
-    fd.append('Country',val('f-assignment'));fd.append('Assignment Owner',val('f-owner'));
+    fd.append('Country',val('f-assignment'));fd.append('Country Owner',val('f-owner'));
+    fd.append('Assignment Name',val('f-assignment-name'));
     fd.append('Project Type',rval('project-type'));
     fd.append('Connect / Flow Number',val('f-connect'));
     fd.append('Region',val('f-market'));fd.append('Division',rval('division'));
@@ -403,9 +407,10 @@ async function submitForm(){
       'Client':val('f-brand'),
       'Brand':val('f-category'),
       'Country':val('f-assignment'),
-      'Assignment Name':val('f-assignment'),
-      'Assignment Owner':val('f-owner'),
+      'Country Name':val('f-assignment'),
+      'Country Owner':val('f-owner'),
       'Region':val('f-market'),
+      'Assignment Name':val('f-assignment-name'),
       'Project Type':rval('project-type'),
       'Connect / Flow Number':val('f-connect'),
       'Division':rval('division'),
