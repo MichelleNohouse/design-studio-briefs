@@ -196,6 +196,15 @@ hr.div{border:none;border-top:1px solid var(--mist);margin:16px 0}
 </div>
 
 <div class="section-block">
+  <div class="section-head"><span class="section-icon">✏️</span><span class="section-label">Section 2 — Brief Details</span><span class="section-sub">Tell us about the work</span></div>
+  <div class="section-body">
+    <div class="grid">
+      <div class="field"><label>What is your request?</label><textarea id="f-request" style="min-height:110px" placeholder="Describe the full scope of work required. Include sizes, materials, specifications, quantities and any other relevant details. Include links to any relevant presentations or decks (PowerPoint, Google Slides etc.) that may help the studio understand the brief…"></textarea></div>
+    </div>
+  </div>
+</div>
+
+<div class="section-block">
   <div class="section-head"><span class="section-icon">📎</span><span class="section-label">Section 3 — Assets & Timeline</span><span class="section-sub">Reference image & production start date</span></div>
   <div class="section-body">
     <div class="grid g2">
@@ -210,7 +219,6 @@ hr.div{border:none;border-top:1px solid var(--mist);margin:16px 0}
         <input type="file" id="ref-input" style="display:none" accept="image/*,.pdf,.ai,.psd,.eps" multiple onchange="handleFile(this,'ref-display','ref-zone')">
         <div id="ref-display" class="file-list-display"></div>
       </div>
-      <div class="field"><label>What is your request?</label><textarea id="f-request" style="min-height:110px" placeholder="Describe the full scope of work required. Include sizes, materials, specifications, quantities and any other relevant details. Include links to any relevant presentations or decks (PowerPoint, Google Slides etc.) that may help the studio understand the brief…"></textarea></div>
       <div class="field"><label>Production Start Date</label><input type="date" id="f-prod-date"><span class="field-hint">When do you require production to begin?</span></div>
     </div>
   </div>
