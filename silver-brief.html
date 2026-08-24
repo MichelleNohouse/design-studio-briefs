@@ -205,6 +205,7 @@ hr.div{border:none;border-top:1px solid var(--mist);margin:16px 0}
         <div class="upload-zone" id="ref-zone" onclick="document.getElementById('ref-input').click()" ondragover="dragOver(event,'ref-zone')" ondragleave="dragLeave('ref-zone')" ondrop="dropFile(event,'ref-input','ref-zone')">
           <div class="upload-icon">🖼️</div><div class="upload-label">Upload references or existing materials</div>
           <div class="upload-sub">Relevant creative materials to aid the team</div><span class="upload-btn">Browse files</span>
+          <p style="font-size:11px;color:var(--subtle);margin-top:8px;text-align:center">For files larger than 10MB please share via a SharePoint or OneDrive link in the Request Details field below</p>
         </div>
         <input type="file" id="ref-input" style="display:none" multiple multiple onchange="handleFile(this,'ref-display','ref-zone')">
         <div id="ref-display" class="file-list-display"></div>
