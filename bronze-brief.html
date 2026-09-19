@@ -106,7 +106,7 @@ hr.div{border:none;border-top:1px solid var(--mist);margin:16px 0}
 .owner-selected{background:var(--auto-bg) !important;border-color:var(--teal) !important}
 .req{color:var(--teal);font-size:11px;margin-left:2px}
 .opt{color:var(--subtle);font-size:11px;font-weight:400;margin-left:4px}
-.submit-hint{font-size:12px;color:var(--subtle);text-align:center;margin-top:10px;font-style:italic}
+.submit-hint{font-size:14px;color:var(--text);text-align:center;margin-top:12px;font-style:italic;font-weight:600}
 
 .agent-iq-notice{background:var(--auto-bg);border-left:4px solid var(--teal);border-radius:4px;padding:14px 18px;margin-bottom:20px;font-size:13.5px;line-height:1.6;color:var(--text)}
 .agent-iq-notice p{margin:0 0 6px 0}
@@ -145,7 +145,7 @@ hr.div{border:none;border-top:1px solid var(--mist);margin:16px 0}
   <div class="section-head"><span class="section-icon">🏷️</span><span class="section-label">Section 1 — Brief Details</span><span class="section-sub">Brand & Brand</span></div>
   <div class="section-body">
     <div class="agent-iq-notice">
-      <p>Do you need a simple visual, a logo onto an item? Please consider using <strong>Agent IQ</strong>.</p>
+      <p>Do you need a simple visual, a logo onto an item? Please consider using <a href="https://asl.claritum.com/system/ai-agent-select" target="_blank" style="color:var(--teal);font-weight:600">Agent IQ</a>.</p>
       <p>However, if you require a simple request to be actioned that cannot be done with Agent IQ, please complete the below job request form.</p>
     </div>
     <div class="grid g2">
@@ -209,7 +209,7 @@ hr.div{border:none;border-top:1px solid var(--mist);margin:16px 0}
         <input type="file" id="ref-input" style="display:none" accept="image/*,.pdf,.ai,.psd,.eps" multiple onchange="handleFile(this,'ref-display','ref-zone')">
         <div id="ref-display" class="file-list-display"></div>
       </div>
-      <div class="field"><label>Production Start Date</label><input type="date" id="f-prod-date"><span class="field-hint">When do you require production to begin?</span></div>
+      <div class="field"><label>Due Date for Assignment</label><input type="date" id="f-prod-date"></div>
     </div>
   </div>
 </div>
@@ -352,7 +352,7 @@ async function submitForm(){
     fd.append('Connect / Flow Number',val('f-connect'));
     fd.append('Region',val('f-market'));fd.append('Division',rval('division'));
     fd.append('Key Visual Required',rval('kv'));fd.append('Files to Production House',rval('pfiles'));
-    fd.append('Factory Confirmed',rval('factory'));fd.append('Production Start Date',val('f-prod-date'));
+    fd.append('Factory Confirmed',rval('factory'));fd.append('Due Date for Assignment',val('f-prod-date'));
     fd.append('Request Details',val('f-request'));
     if(refFile)fd.append('Reference Image',refFile,refFile.name);
     fd.append('Files Attached', refFile ? 'Yes' : 'No');
@@ -383,7 +383,7 @@ async function submitForm(){
       'Key Visual Required':rval('kv'),
       'Files to Production House':rval('pfiles'),
       'Factory Confirmed':rval('factory'),
-      'Production Start Date':val('f-prod-date'),
+      'Due Date for Assignment':val('f-prod-date'),
       'Files Attached':refFiles.length?'Yes':'No',
       'RefFileName':refFileData?refFileData.name:'',
       'RefFileContent':refFileData?refFileData.contentBytes:'',
