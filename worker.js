@@ -1,7 +1,8 @@
-// Cloudflare Worker v4
+// Cloudflare Worker v5
 // Handles:
-// 1. GET /?q=name  — Azure AD directory search
-// 2. POST /upload  — Upload file to SharePoint Brief Attachments library
+// 1. GET /?q=name     — Azure AD directory search
+// 2. POST /upload     — Upload file to SharePoint Brief Attachments library
+// 3. POST /submit     — Forward brief data to Power Automate (bypasses CORS)
 
 const CORS_HEADERS = {
   'Access-Control-Allow-Origin': '*',
@@ -9,8 +10,8 @@ const CORS_HEADERS = {
   'Access-Control-Allow-Headers': 'Content-Type',
 };
 
-const SHAREPOINT_SITE = 'https://asiansourcinglink.sharepoint.com/sites/LinkCreativeServices';
 const SHAREPOINT_LIBRARY = 'Brief Attachments';
+const POWER_AUTOMATE_URL = 'https://default21708defe553461984acf7d307c17e.76.environment.api.powerplatform.com:443/powerautomate/automations/direct/cu/20/workflows/98399f3c9b6549389b55407fdecc9c2b/triggers/manual/paths/invoke?api-version=1&sp=%2Ftriggers%2Fmanual%2Frun&sv=1.0&sig=UzVEfCvX187vNg7VXZHFDQ9YtG_DiI1Qxx2_dGMPGQA';
 
 export default {
   async fetch(request, env) {
@@ -21,7 +22,27 @@ export default {
 
     const url = new URL(request.url);
 
-    // ── ROUTE 1: POST /upload — upload file to SharePoint ──
+    // ── ROUTE 1: POST /submit — forward brief to Power Automate ──
+    if (request.method === 'POST' && url.pathname === '/submit') {
+      try {
+        const body = await request.json();
+        const paResp = await fetch(POWER_AUTOMATE_URL, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(body)
+        });
+        return new Response(JSON.stringify({ ok: true, status: paResp.status }), {
+          headers: { ...CORS_HEADERS, 'Content-Type': 'application/json' }
+        });
+      } catch (err) {
+        return new Response(JSON.stringify({ ok: false, error: err.message }), {
+          status: 500,
+          headers: { ...CORS_HEADERS, 'Content-Type': 'application/json' }
+        });
+      }
+    }
+
+    // ── ROUTE 2: POST /upload — upload file to SharePoint ──
     if (request.method === 'POST' && url.pathname === '/upload') {
       try {
         const body = await request.json();
@@ -33,7 +54,6 @@ export default {
           });
         }
 
-        // Get token
         const token = await getToken(env);
         if (!token) {
           return new Response(JSON.stringify({ error: 'Auth failed' }), {
@@ -41,15 +61,13 @@ export default {
           });
         }
 
-        // Get SharePoint site ID
         const siteResp = await fetch(
-          `https://graph.microsoft.com/v1.0/sites/asiansourcinglink.sharepoint.com:/sites/LinkCreativeServices`,
+          'https://graph.microsoft.com/v1.0/sites/asiansourcinglink.sharepoint.com:/sites/LinkCreativeServices',
           { headers: { Authorization: `Bearer ${token}` } }
         );
         const siteData = await siteResp.json();
         const siteId = siteData.id;
 
-        // Get drive ID for Brief Attachments library
         const drivesResp = await fetch(
           `https://graph.microsoft.com/v1.0/sites/${siteId}/drives`,
           { headers: { Authorization: `Bearer ${token}` } }
@@ -63,45 +81,27 @@ export default {
           });
         }
 
-        // Create folder named after Job ID if it doesn't exist
         await fetch(
           `https://graph.microsoft.com/v1.0/drives/${drive.id}/root/children`,
           {
             method: 'POST',
-            headers: {
-              Authorization: `Bearer ${token}`,
-              'Content-Type': 'application/json'
-            },
-            body: JSON.stringify({
-              name: jobId,
-              folder: {},
-              '@microsoft.graph.conflictBehavior': 'rename'
-            })
+            headers: { Authorization: `Bearer ${token}`, 'Content-Type': 'application/json' },
+            body: JSON.stringify({ name: jobId, folder: {}, '@microsoft.graph.conflictBehavior': 'rename' })
           }
         );
 
-        // Upload file to Job ID folder
         const fileBytes = Uint8Array.from(atob(fileContent), c => c.charCodeAt(0));
         const uploadResp = await fetch(
           `https://graph.microsoft.com/v1.0/drives/${drive.id}/root:/${jobId}/${fileName}:/content`,
           {
             method: 'PUT',
-            headers: {
-              Authorization: `Bearer ${token}`,
-              'Content-Type': fileType || 'application/octet-stream'
-            },
+            headers: { Authorization: `Bearer ${token}`, 'Content-Type': fileType || 'application/octet-stream' },
             body: fileBytes
           }
         );
-
         const uploadData = await uploadResp.json();
 
-        return new Response(JSON.stringify({
-          ok: true,
-          fileUrl: uploadData.webUrl || '',
-          fileName: fileName,
-          jobId: jobId
-        }), {
+        return new Response(JSON.stringify({ ok: true, fileUrl: uploadData.webUrl || '', fileName, jobId }), {
           headers: { ...CORS_HEADERS, 'Content-Type': 'application/json' }
         });
 
@@ -112,7 +112,7 @@ export default {
       }
     }
 
-    // ── ROUTE 2: GET /?q=name — Azure AD directory search ──
+    // ── ROUTE 3: GET /?q=name — Azure AD directory search ──
     if (request.method === 'GET') {
       const query = url.searchParams.get('q');
       if (!query || query.length < 2) {
@@ -130,14 +130,9 @@ export default {
         }
 
         const graphUrl = `https://graph.microsoft.com/v1.0/users?$search="displayName:${query}"&$select=displayName,mail,jobTitle&$top=8&$orderby=displayName&ConsistencyLevel=eventual`;
-
         const graphResp = await fetch(graphUrl, {
-          headers: {
-            Authorization: `Bearer ${token}`,
-            ConsistencyLevel: 'eventual'
-          }
+          headers: { Authorization: `Bearer ${token}`, ConsistencyLevel: 'eventual' }
         });
-
         const graphData = await graphResp.json();
         const users = (graphData.value || []).map(u => ({
           displayName: u.displayName || '',
@@ -177,7 +172,5 @@ async function getToken(env) {
     );
     const data = await resp.json();
     return data.access_token || null;
-  } catch (e) {
-    return null;
-  }
+  } catch (e) { return null; }
 }
