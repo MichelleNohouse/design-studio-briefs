@@ -12,6 +12,8 @@
   --bronze:#C2773D; --bronze-dark:#7A4A26;
   --silver:#A9B4BD; --silver-dark:#5C6670;
   --gold:#C9C530; --gold-dark:#8C8A1E;
+  --amber:#D9B461; --amber-dark:#A07820;
+  --label:#5B3FA0; --label-dark:#3B2870;
   --text:#F3F6F8; --muted:#A9BBC8; --faint:#5C7488;
   --line: rgba(255,255,255,0.09);
   --line-soft: rgba(255,255,255,0.05);
@@ -52,8 +54,8 @@ body::before{
 .hero p{font-size:16px;color:var(--muted);max-width:480px;line-height:1.7}
 
 /* TIERS */
-.tiers{display:grid;grid-template-columns:1fr 1fr 1fr;gap:1px;background:var(--line);border:1px solid var(--line);border-radius:16px;overflow:hidden;margin:52px 0 0}
-@media(max-width:860px){.tiers{grid-template-columns:1fr}}
+.tiers{display:grid;grid-template-columns:1fr 1fr 1fr 1fr 1fr;gap:1px;background:var(--line);border:1px solid var(--line);border-radius:16px;overflow:hidden;margin:52px 0 0}
+@media(max-width:1200px){.tiers{grid-template-columns:1fr 1fr 1fr}}@media(max-width:780px){.tiers{grid-template-columns:1fr 1fr}}@media(max-width:580px){.tiers{grid-template-columns:1fr}}
 
 .tier{background:var(--navy);padding:0;position:relative;text-decoration:none;color:var(--text);display:flex;flex-direction:column;transition:background .35s ease}
 .tier:hover{background:var(--navy-mid)}
@@ -114,6 +116,16 @@ body::before{
   .wrap{padding:0 20px}
   .tier-rank, .tier-rank-sub{font-size:22px}
 }
+
+.tier.artwork .tier-photo{background:linear-gradient(160deg,#2A1A08 0%,#3D2510 60%,#4A2E14 100%)}
+.tier.artwork .block{background:linear-gradient(135deg,#F0C060,var(--amber) 55%,var(--amber-dark))}
+.tier.artwork .tier-rank{color:var(--amber)}
+.tier.artwork:hover .tier-arrow{border-color:var(--amber)}
+
+.tier.labels .tier-photo{background:linear-gradient(160deg,#1A0F35 0%,#2A1A50 60%,#321D60 100%)}
+.tier.labels .block{background:linear-gradient(135deg,#8B6FCC,var(--label) 55%,var(--label-dark))}
+.tier.labels .tier-rank{color:#9B7FDC}
+.tier.labels:hover .tier-arrow{border-color:#9B7FDC}
 </style>
 </head>
 <body>
@@ -130,8 +142,8 @@ body::before{
 
   <div class="hero">
     <div class="hero-eyebrow">Internal · Creative Studio</div>
-    <h1>Brief the studio in three weights.</h1>
-    <p>Choose the tier that matches the work. Every brief routes straight to the studio and into the Master Tracker — no forms lost, no follow-up emails needed.</p>
+    <h1>Brief the studio the right way.</h1>
+    <p>Choose the brief type that matches your work. Every submission routes straight to the studio and into the Master Tracker — no forms lost, no follow-up emails needed.</p>
   </div>
 
   <div class="tiers">
@@ -176,6 +188,36 @@ body::before{
         <div class="tier-desc">A fresh creative opportunity needing strategic development of new concepts and an original presentation. Deliver the client background and set the opportunity.</div>
         <div class="tier-meta">
           <span class="tier-effort">High effort</span>
+          <span class="tier-arrow">→</span>
+        </div>
+      </div>
+    </a>
+
+    <a class="tier artwork" href="artwork-brief.html">
+      <div class="tier-photo"><div class="block"></div></div>
+      <div class="tier-body">
+        <div class="tier-rank">ARTWORK</div>
+        <div class="tier-rank-sub">BRIEFS</div>
+        <div class="tier-when">When to use</div>
+        <div class="tier-when-detail">Production-ready artwork</div>
+        <div class="tier-desc">Brand-compliant artworks for print and digital. Includes die cutters, brand assets, imagery and output specifications.</div>
+        <div class="tier-meta">
+          <span class="tier-effort">Production</span>
+          <span class="tier-arrow">→</span>
+        </div>
+      </div>
+    </a>
+
+    <a class="tier labels" href="labels-brief-lean.html">
+      <div class="tier-photo"><div class="block"></div></div>
+      <div class="tier-body">
+        <div class="tier-rank">LABELS</div>
+        <div class="tier-rank-sub">BRIEFS</div>
+        <div class="tier-when">When to use</div>
+        <div class="tier-when-detail">SIL, packaging labels &amp; leaflets</div>
+        <div class="tier-desc">Multi-market label artwork across languages and importers. Upload the completed Master Labelling Template and reference artwork.</div>
+        <div class="tier-meta">
+          <span class="tier-effort">Labels</span>
           <span class="tier-arrow">→</span>
         </div>
       </div>
