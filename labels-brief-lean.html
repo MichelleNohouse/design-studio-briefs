@@ -201,11 +201,7 @@ body{font-family:'DM Sans',sans-serif;background:var(--mist);color:var(--text);m
       <!-- Master template upload -->
       <div class="field" style="margin-bottom:20px">
         <label>Master Labelling Template (Excel) <span class="req">*</span></label>
-        <div style="margin-bottom:10px;padding:10px 14px;background:var(--auto-bg);border:1.5px solid var(--auto-bd);border-radius:6px;font-size:13px;display:flex;align-items:center;gap:10px">
-          <span>📥</span>
-          <span style="color:var(--text)">Don't have the template?</span>
-          <a href="Link_Master_Labelling_Template_v2.xlsx" download target="_blank" style="color:var(--teal);font-weight:700;text-decoration:none;margin-left:auto">Download Master Labelling Template v2 →</a>
-        </div>
+
         <div class="upload-zone" id="template-zone" onclick="document.getElementById('template-input').click()" ondragover="dragOver(event,'template-zone')" ondragleave="dragLeave('template-zone')" ondrop="dropFile(event,'template-input','template-zone')">
           <div class="upload-icon">📊</div>
           <div class="upload-label">Upload your completed labelling template</div>
