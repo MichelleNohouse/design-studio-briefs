@@ -1,0 +1,519 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>Promo Brief — Design Studio</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600;700&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root{
+  --navy:#0B2740;--teal:#00818F;--cyan:#5FEFCF;--deep:#003250;
+  --white:#FFFFFF;--mist:#EBF3F7;--border:#C5D8E4;--subtle:#5A7080;
+  --text:#1A3040;--red:#C03828;
+  --promo:#1A7F4B;--promo-dark:#0F5C35;--promo-light:#E8F5EE;--promo-bd:#8FCFAA;
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{font-family:'DM Sans',sans-serif;background:var(--mist);color:var(--text);min-height:100vh;-webkit-font-smoothing:antialiased;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+.topbar{background:var(--navy);padding:14px 24px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:100}
+.topbar-brand{font-family:'DM Mono',monospace;font-size:13px;font-weight:500;color:var(--white);letter-spacing:2px;text-transform:uppercase}
+.topbar-badge{background:var(--promo);color:var(--white);font-size:11px;font-weight:700;padding:4px 10px;border-radius:20px;letter-spacing:1px;text-transform:uppercase}
+.progress-bar{background:var(--navy);border-top:1px solid rgba(255,255,255,0.1);padding:0 24px;display:flex;gap:0;overflow-x:auto}
+.prog-step{flex:1;min-width:90px;padding:10px 8px;text-align:center;font-size:11px;color:rgba(255,255,255,0.45);font-weight:500;border-bottom:2px solid transparent;cursor:default;white-space:nowrap;transition:all .2s}
+.prog-step.active{color:#6EE89A;border-bottom-color:#6EE89A}
+.prog-step.done{color:var(--cyan);border-bottom-color:var(--cyan)}
+.page{max-width:900px;margin:0 auto;padding:24px 16px 48px}
+
+.promo-note{background:var(--promo-light);border-left:4px solid var(--promo);border-radius:6px;padding:16px 20px;margin-bottom:24px;font-size:13.5px;line-height:1.7;color:var(--text)}
+.promo-note strong{color:var(--promo);display:block;margin-bottom:6px;font-size:14px}
+
+.section-block{background:var(--white);border-radius:10px;box-shadow:0 1px 4px rgba(11,39,64,0.08);margin-bottom:20px;overflow:hidden}
+.section-head{background:var(--navy);padding:14px 20px;display:flex;align-items:center;gap:10px}
+.section-icon{font-size:18px}
+.section-label{font-size:14px;font-weight:700;color:var(--white);letter-spacing:.3px}
+.section-sub{font-size:11px;color:rgba(255,255,255,0.5);margin-left:auto;font-family:'DM Mono',monospace}
+.section-body{padding:20px}
+.grid{display:grid;gap:16px}
+.g2{grid-template-columns:1fr 1fr}
+.g3{grid-template-columns:1fr 1fr 1fr}
+@media(max-width:640px){.g2,.g3{grid-template-columns:1fr}}
+.field{display:flex;flex-direction:column;gap:6px}
+.field label{font-size:12px;font-weight:600;color:var(--navy);text-transform:uppercase;letter-spacing:.5px}
+.field input[type=text],.field input[type=date],.field textarea,.field select{border:1.5px solid var(--border);border-radius:4px;padding:9px 12px;font-family:'DM Sans',sans-serif;font-size:14px;color:var(--text);background:var(--white);transition:border-color .15s,box-shadow .15s;width:100%}
+.field input:focus,.field textarea:focus,.field select:focus{outline:none;border-color:var(--promo);box-shadow:0 0 0 3px rgba(26,127,75,.1)}
+.field-hint{font-size:11px;color:var(--subtle);margin-top:2px}
+.req{color:var(--promo);font-size:11px;margin-left:2px}
+.opt{color:var(--subtle);font-size:11px;font-weight:400;margin-left:4px}
+
+/* Choice buttons (radio) */
+.choice-group{display:flex;flex-wrap:wrap;gap:8px;margin-top:4px}
+.choice-btn{display:flex;align-items:center;gap:6px;padding:8px 14px;border:1.5px solid var(--border);border-radius:6px;cursor:pointer;font-size:13px;font-weight:500;color:var(--text);transition:all .15s;user-select:none}
+.choice-btn:hover{border-color:var(--promo);background:var(--promo-light)}
+.choice-btn.selected{border-color:var(--promo);background:var(--promo-light);color:var(--navy)}
+.choice-btn input{display:none}
+.c-dot{width:8px;height:8px;border-radius:50%;border:2px solid var(--border);transition:all .15s;flex-shrink:0}
+.choice-btn.selected .c-dot{background:var(--promo);border-color:var(--promo)}
+
+/* Upload zone */
+.upload-zone{border:2px dashed var(--border);border-radius:8px;padding:28px 20px;text-align:center;cursor:pointer;transition:all .2s;background:var(--white)}
+.upload-zone:hover,.upload-zone.drag{border-color:var(--promo);background:var(--promo-light)}
+.upload-icon{font-size:32px;margin-bottom:8px}
+.upload-label{font-size:14px;font-weight:600;color:var(--navy);margin-bottom:4px}
+.upload-sub{font-size:12px;color:var(--subtle);margin-bottom:8px}
+.upload-btn{display:inline-block;background:var(--deep);color:var(--cyan);padding:8px 20px;border-radius:4px;font-size:13px;font-weight:600;margin-top:4px}
+.file-list-display{display:none;margin-top:10px;background:var(--promo-light);border:1.5px solid var(--promo-bd);border-radius:4px;padding:10px 14px}
+.file-item{display:flex;align-items:center;gap:10px;padding:5px 0;border-bottom:1px solid rgba(26,127,75,.15);font-size:13px}
+.file-item:last-of-type{border-bottom:none}
+.file-item .file-name{font-weight:600;color:var(--promo);flex:1}
+.file-item .file-size{color:var(--subtle);font-size:11px}
+.file-list-display .file-remove{margin-top:8px;background:none;border:1px solid rgba(192,56,40,.3);color:var(--red);cursor:pointer;font-size:12px;padding:4px 10px;border-radius:3px;width:100%}
+
+/* Owner search */
+.owner-wrap{position:relative}
+.owner-input{width:100%;border:1.5px solid var(--border);border-radius:4px;padding:9px 12px;font-family:'DM Sans',sans-serif;font-size:14px;color:var(--text);background:var(--white)}
+.owner-input:focus{outline:none;border-color:var(--promo);box-shadow:0 0 0 3px rgba(26,127,75,.1)}
+.owner-dropdown{position:absolute;top:calc(100% + 4px);left:0;right:0;background:var(--white);border:1.5px solid var(--promo);border-radius:4px;box-shadow:0 4px 20px rgba(0,0,0,.12);z-index:200;max-height:220px;overflow-y:auto;display:none}
+.owner-dropdown.open{display:block}
+.owner-option{padding:10px 14px;cursor:pointer;font-size:13px;display:flex;flex-direction:column;gap:2px;border-bottom:1px solid var(--mist)}
+.owner-option:hover{background:var(--promo-light)}
+.owner-option-name{font-weight:600;color:var(--text)}
+.owner-option-email{font-size:11px;color:var(--subtle)}
+.owner-loading{padding:10px 14px;font-size:13px;color:var(--subtle);font-style:italic}
+.owner-selected{background:var(--promo-light)!important;border-color:var(--promo)!important}
+
+/* Teams note */
+.teams-note{background:#E8F4FD;border-left:4px solid #0078D4;border-radius:6px;padding:12px 16px;margin-bottom:20px;font-size:13px;line-height:1.6;color:var(--text)}
+.teams-note strong{color:#0078D4}
+
+/* Submit bar */
+.submit-bar{background:var(--white);border:1px solid var(--border);border-radius:5px;padding:18px 24px;display:flex;align-items:center;justify-content:space-between;gap:16px;flex-wrap:wrap;margin-top:4px}
+.submit-meta{font-size:13px;color:var(--subtle)}.submit-meta strong{color:var(--text)}
+.submit-hint{font-size:12px;color:var(--subtle);width:100%;margin-top:4px}
+.btn-submit{background:var(--promo);color:#fff;border:none;padding:13px 30px;border-radius:4px;font-family:'DM Sans',sans-serif;font-size:14px;font-weight:700;cursor:pointer;letter-spacing:.3px;transition:background .15s,transform .1s;display:flex;align-items:center;gap:8px}
+.btn-submit:hover{background:var(--promo-dark);transform:translateY(-1px)}
+.btn-submit:disabled{opacity:.5;cursor:not-allowed}
+
+/* Job ID display */
+.job-id-display{font-family:'DM Mono',monospace;font-size:20px;font-weight:500;color:var(--promo);letter-spacing:2px;padding:10px 0 4px}
+.job-id-label{font-size:11px;color:var(--subtle);text-transform:uppercase;letter-spacing:.5px}
+
+/* Confirmation overlay */
+.confirm-overlay{display:none;position:fixed;inset:0;background:rgba(11,39,64,.7);z-index:500;align-items:center;justify-content:center}
+.confirm-overlay.show{display:flex}
+.confirm-box{background:var(--white);border-radius:12px;padding:36px 32px;max-width:520px;width:90%;box-shadow:0 8px 40px rgba(0,0,0,.2)}
+.confirm-icon{font-size:48px;text-align:center;margin-bottom:16px}
+.confirm-title{font-size:20px;font-weight:700;color:var(--navy);text-align:center;margin-bottom:8px}
+.confirm-sub{font-size:14px;color:var(--subtle);text-align:center;margin-bottom:24px;line-height:1.6}
+.confirm-id{font-family:'DM Mono',monospace;font-size:18px;color:var(--promo);font-weight:500;text-align:center;background:var(--promo-light);padding:10px 20px;border-radius:6px;margin-bottom:24px;letter-spacing:2px}
+.erow{display:flex;gap:12px;padding:8px 0;border-bottom:1px solid var(--mist);font-size:13px}
+.erow:last-of-type{border-bottom:none}
+.ek{font-weight:600;color:var(--navy);min-width:160px;flex-shrink:0}
+.ev{color:var(--text);flex:1;word-break:break-word}
+.confirm-close{width:100%;margin-top:20px;padding:12px;background:var(--promo);color:#fff;border:none;border-radius:6px;font-family:'DM Sans',sans-serif;font-size:14px;font-weight:700;cursor:pointer}
+
+/* Project Type cards (request categories) */
+.proj-type-group{display:flex;flex-direction:column;gap:10px;margin-top:4px}
+.proj-type-card{border:1.5px solid var(--border);border-radius:8px;padding:12px 16px;cursor:pointer;transition:all .15s;display:flex;align-items:flex-start;gap:10px}
+.proj-type-card:hover{border-color:var(--promo);background:var(--promo-light)}
+.proj-type-card.selected{border-color:var(--promo);background:var(--promo-light)}
+.proj-type-card input{display:none}
+.proj-type-dot{width:14px;height:14px;border-radius:50%;border:2px solid var(--border);flex-shrink:0;margin-top:3px;transition:all .15s}
+.proj-type-card.selected .proj-type-dot{background:var(--promo);border-color:var(--promo)}
+.proj-type-title{font-size:13px;font-weight:700;color:var(--navy)}
+.proj-type-desc{font-size:11px;color:var(--subtle);margin-top:2px;line-height:1.5}
+
+/* Countries sub-field */
+.sub-field{margin-top:10px;display:none;animation:fadeIn .2s}
+.sub-field.show{display:block}
+@keyframes fadeIn{from{opacity:0;transform:translateY(-4px)}to{opacity:1;transform:translateY(0)}}
+</style>
+</head>
+<body>
+
+<div class="topbar">
+  <span class="topbar-brand">Link · Design Studio</span>
+  <span class="topbar-badge">Promo Brief</span>
+</div>
+
+<div class="progress-bar">
+  <div class="prog-step active" id="prog-1">① Brief Details</div>
+  <div class="prog-step" id="prog-2">② Description</div>
+  <div class="prog-step" id="prog-3">③ Brief Actions</div>
+</div>
+
+<div class="page">
+
+  <div class="promo-note">
+    <strong>Central Promo Team — Brief Request</strong>
+    Try to have all information, details and resources ready when you approach the Promo Team to work on your project — the more thorough and informed the brief, the more successful and efficient the process.
+  </div>
+
+  <!-- ══════════════════════════════════════════════════════════ -->
+  <!-- SECTION 1 — BRIEF DETAILS -->
+  <!-- ══════════════════════════════════════════════════════════ -->
+  <div class="section-block" id="sec-1">
+    <div class="section-head">
+      <span class="section-icon">🏷️</span>
+      <span class="section-label">Section 1 — Brief Details</span>
+      <span class="section-sub">Brand &amp; Country</span>
+    </div>
+    <div class="section-body">
+
+      <div class="grid g2">
+        <div class="field"><label>Client <span class="req">*</span></label><input type="text" id="f-brand" placeholder="e.g. Nestlé, Danone, Mars…" oninput="generateJobId();updateProgress()"></div>
+        <div class="field"><label>Brand <span class="req">*</span></label><input type="text" id="f-category" placeholder="e.g. Evian, Volvic, M&amp;M's…"></div>
+        <div class="field"><label>Country <span class="req">*</span></label><input type="text" id="f-assignment" placeholder="e.g. Thailand, Philippines, France…"></div>
+        <div class="field"><label>Region <span class="req">*</span></label><input type="text" id="f-market" placeholder="e.g. APAC, EMEA, LATAM…"></div>
+        <div class="field"><label>Assignment Name <span class="req">*</span></label><input type="text" id="f-assignment-name" placeholder="Give this project a clear name…"></div>
+        <div class="field"><label>Connect / Flow Number <span class="opt">(optional)</span></label><input type="text" id="f-connect" placeholder="e.g. FL-12345…"></div>
+        <div class="field"><label>Assignment Owner</label>
+          <div class="owner-wrap">
+            <input type="text" id="f-owner" class="owner-input" placeholder="Start typing your name…" autocomplete="off" oninput="searchOwner('f-owner','owner-dropdown','f-owner-val')">
+            <div class="owner-dropdown" id="owner-dropdown"></div>
+            <input type="hidden" id="f-owner-val">
+          </div>
+          <span class="field-hint">Type at least 2 characters to search the company directory</span>
+        </div>
+        <div class="field"><label>Requestor Manager</label>
+          <div class="owner-wrap">
+            <input type="text" id="f-req-mgr" class="owner-input" placeholder="Search by name…" autocomplete="off" oninput="searchOwner('f-req-mgr','req-mgr-dropdown','f-req-mgr-val')">
+            <div class="owner-dropdown" id="req-mgr-dropdown"></div>
+            <input type="hidden" id="f-req-mgr-val">
+          </div>
+        </div>
+        <div class="field"><label>Division <span class="req">*</span></label>
+          <div class="choice-group" id="division-group">
+            <label class="choice-btn" onclick="pickRadio(this,'division-group')"><input type="radio" name="division" value="Transactional"><span class="c-dot"></span>Transactional</label>
+            <label class="choice-btn" onclick="pickRadio(this,'division-group')"><input type="radio" name="division" value="Outsource"><span class="c-dot"></span>Outsource</label>
+          </div>
+        </div>
+      </div>
+
+      <!-- Project Type -->
+      <div class="field" style="margin-top:20px">
+        <label>Project Type <span class="req">*</span></label>
+        <div class="proj-type-group" id="proj-type-group">
+
+          <label class="proj-type-card" onclick="pickProjType(this)">
+            <input type="radio" name="proj-type" value="Idea Research">
+            <div class="proj-type-dot"></div>
+            <div>
+              <div class="proj-type-title">💡 Idea Research</div>
+              <div class="proj-type-desc">Research of ideas / items for a particular inquiry or proposal. No design needed.</div>
+            </div>
+          </label>
+
+          <label class="proj-type-card" onclick="pickProjType(this)">
+            <input type="radio" name="proj-type" value="Market / Brand Research">
+            <div class="proj-type-dot"></div>
+            <div>
+              <div class="proj-type-title">🔍 Market / Brand Research</div>
+              <div class="proj-type-desc">Background research of a certain market or brand. No design needed.</div>
+              <div class="sub-field" id="countriesField" style="margin-top:8px">
+                <input type="text" id="countriesCovered" placeholder="Countries / Regions Covered, e.g. SEA, EU" onclick="event.stopPropagation()">
+              </div>
+            </div>
+          </label>
+
+          <label class="proj-type-card" onclick="pickProjType(this)">
+            <input type="radio" name="proj-type" value="Case Study">
+            <div class="proj-type-dot"></div>
+            <div>
+              <div class="proj-type-title">📂 Case Study</div>
+              <div class="proj-type-desc">Research of previously confirmed orders at LINK.</div>
+            </div>
+          </label>
+
+          <label class="proj-type-card" onclick="pickProjType(this)">
+            <input type="radio" name="proj-type" value="Proposal / Catalogue">
+            <div class="proj-type-dot"></div>
+            <div>
+              <div class="proj-type-title">📑 Proposal / Catalogue</div>
+              <div class="proj-type-desc">Gathering ideas / items and working with the creative team for re-branding and presentation layout design.</div>
+            </div>
+          </label>
+
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- ══════════════════════════════════════════════════════════ -->
+  <!-- SECTION 2 — PROJECT DESCRIPTION -->
+  <!-- ══════════════════════════════════════════════════════════ -->
+  <div class="section-block" id="sec-2">
+    <div class="section-head">
+      <span class="section-icon">📋</span>
+      <span class="section-label">Section 2 — Project Description</span>
+      <span class="section-sub">MANDATORY</span>
+    </div>
+    <div class="section-body">
+
+      <div class="field">
+        <label>Project Description <span class="req">*</span></label>
+        <textarea id="projectDescription" rows="12" placeholder="Please include as much detail as possible. Consider covering:
+
+• Client's Social Media Links — paste relevant URLs to help the team research the brand
+• Target Audience — e.g. All aged / Collectors / 18-35 female
+• Theme — e.g. Travel Essentials / Collectible Items
+• Budget &amp; Quantity — e.g. QTY: 1,000–3,000 units / Budget: USD 1–50 per unit
+• Limitations / Restrictions — e.g. brand guideline restrictions, no character plush with arms
+• Objectives — desired outcomes, strategies for success and measurable results if possible" style="resize:vertical"></textarea>
+        <span class="field-hint">The more context you give, the better the outcome. Be as specific as possible.</span>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- ══════════════════════════════════════════════════════════ -->
+  <!-- SECTION 3 — BRIEF ACTIONS / INSTRUCTIONS -->
+  <!-- ══════════════════════════════════════════════════════════ -->
+  <div class="section-block" id="sec-3">
+    <div class="section-head">
+      <span class="section-icon">📝</span>
+      <span class="section-label">Section 3 — Request Details</span>
+      <span class="section-sub">OPTIONAL BUT RECOMMENDED</span>
+    </div>
+    <div class="section-body">
+
+      <div class="field" style="margin-bottom:20px">
+        <label>Specific Items in Mind &amp; Brief Instructions <span class="opt">(optional)</span></label>
+        <textarea id="briefActions" rows="6" placeholder="If you have specific items in mind that you would want to be included in the request, and previous works you want to reference, please include them here.&#10;&#10;e.g. Please help come up with some ideas to present for Evian, Volvic, etc.&#10;1. Cooler bag  2. Canvas tote bag  3. Puffy bag…" style="resize:vertical"></textarea>
+        <span class="field-hint">You can add visual cues below to reinforce and make the instructions clearer</span>
+      </div>
+
+      <!-- Reference images upload -->
+      <div class="field">
+        <label>Reference Images / Visual Cues <span class="opt">(optional)</span></label>
+        <div class="upload-zone" id="refZone" ondragover="event.preventDefault();this.classList.add('drag')" ondragleave="this.classList.remove('drag')" ondrop="handleDrop(event,'refZone','refInput','refList')" onclick="document.getElementById('refInput').click()">
+          <div class="upload-icon">🖼️</div>
+          <div class="upload-label">Drop reference images here</div>
+          <div class="upload-sub">JPG, PNG, PDF, AI — multiple files accepted</div>
+          <div class="upload-btn">Browse files</div>
+        </div>
+        <input type="file" id="refInput" accept=".png,.jpg,.jpeg,.pdf,.ai,.eps,.gif,.webp" multiple style="display:none" onchange="handleFiles(this,'refList','refZone')">
+        <div class="file-list-display" id="refList">
+          <div class="file-items"></div>
+          <button class="file-remove" onclick="clearFiles('refInput','refList','refZone')">✕ Remove all</button>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- SUBMIT BAR -->
+  <div class="submit-bar">
+    <div class="submit-meta">Brief type: <strong>🥈 Silver — Design Brief</strong></div>
+    <div class="teams-note">
+      <strong>💬 Microsoft Teams</strong><br>
+      When you submit your brief, an active chat will appear in your Teams messages allowing direct contact with the designer assigned to your brief.
+    </div>
+    <button class="btn-submit" id="submitBtn" onclick="submitBrief()">Submit Promo Brief →</button>
+    <p class="submit-hint">Please click once only — larger files may take up to 10 seconds to submit. Please wait.</p>
+  </div>
+
+</div><!-- /page -->
+
+<!-- CONFIRMATION OVERLAY -->
+<div class="confirm-overlay" id="confirmOverlay">
+  <div class="confirm-box">
+    <div class="confirm-icon">🎉</div>
+    <div class="confirm-title">Brief Submitted!</div>
+    <div class="confirm-sub">Your Promo Brief has been received. Quote your Job ID when following up with the team.</div>
+    <div class="confirm-id" id="confirmId">PR-——</div>
+    <div id="confirmSummary"></div>
+    <button class="confirm-close" onclick="document.getElementById('confirmOverlay').classList.remove('show');document.getElementById('submitBtn').disabled=false">Close</button>
+  </div>
+</div>
+
+<script>
+// ── Job ID ──────────────────────────────────────────────────────────────────
+let jobId = '';
+function generateJobId(){
+  if(jobId) return;
+  const now = new Date();
+  const yy = String(now.getFullYear()).slice(2);
+  const mm = String(now.getMonth()+1).padStart(2,'0');
+  const dd = String(now.getDate()).padStart(2,'0');
+  const rnd = String(Math.floor(1000+Math.random()*9000));
+  jobId = `PR-${yy}${mm}${dd}-${rnd}`;
+  document.getElementById('jobIdDisplay').textContent = jobId;
+}
+
+// ── Progress bar ─────────────────────────────────────────────────────────────
+function updateProgress(){
+  const s1done = document.getElementById('f-brand').value.trim() &&
+                 document.querySelector('[name="proj-type"]:checked');
+  const s2done = document.getElementById('projectDescription').value.trim();
+  const s3done = document.getElementById('briefActions').value.trim();
+
+  ['prog-1','prog-2','prog-3'].forEach(id=>{
+    document.getElementById(id).classList.remove('active','done');
+  });
+
+  if(s3done) document.getElementById('prog-3').classList.add('done');
+  if(s2done) document.getElementById('prog-2').classList.add(s3done?'done':'active');
+  else if(s1done) document.getElementById('prog-2').classList.add('active');
+  if(s1done) document.getElementById('prog-1').classList.add(s2done?'done':'active');
+  else document.getElementById('prog-1').classList.add('active');
+}
+
+// ── Radio helpers ─────────────────────────────────────────────────────────────
+function pickRadio(el, gid){
+  document.querySelectorAll('#'+gid+' .choice-btn').forEach(b=>b.classList.remove('selected'));
+  el.classList.add('selected');
+  el.querySelector('input').checked=true;
+  updateProgress();
+}
+
+function pickProjType(el){
+  document.querySelectorAll('#proj-type-group .proj-type-card').forEach(c=>c.classList.remove('selected'));
+  el.classList.add('selected');
+  el.querySelector('input').checked=true;
+  // Show countries sub-field only for Market / Brand Research
+  const val = el.querySelector('input').value;
+  document.getElementById('countriesField').classList.toggle('show', val === 'Market / Brand Research');
+  updateProgress();
+}
+
+// ── Azure AD people search ────────────────────────────────────────────────────
+let searchTimer={};
+function searchOwner(inputId,dropId,valId){
+  const q=document.getElementById(inputId).value.trim();
+  const drop=document.getElementById(dropId);
+  clearTimeout(searchTimer[inputId]);
+  if(q.length<2){drop.innerHTML='';drop.classList.remove('open');return;}
+  drop.innerHTML='<div class="owner-loading">Searching…</div>';
+  drop.classList.add('open');
+  searchTimer[inputId]=setTimeout(async()=>{
+    try{
+      const r=await fetch(`https://brief-router.linkcs.workers.dev/?q=${encodeURIComponent(q)}`);
+      const data=await r.json();
+      if(!data.length){drop.innerHTML='<div class="owner-loading">No results found</div>';return;}
+      drop.innerHTML=data.map(p=>`<div class="owner-option" onclick="selectOwner('${inputId}','${dropId}','${valId}','${p.displayName}','${p.mail||''}')"><span class="owner-option-name">${p.displayName}</span><span class="owner-option-email">${p.mail||''}</span></div>`).join('');
+    }catch{drop.innerHTML='<div class="owner-loading">Search unavailable — type name manually</div>';}
+  },350);
+}
+function selectOwner(inputId,dropId,valId,name,email){
+  document.getElementById(inputId).value=name;
+  document.getElementById(inputId).classList.add('owner-selected');
+  document.getElementById(valId).value=email||name;
+  document.getElementById(dropId).classList.remove('open');
+  document.getElementById(dropId).innerHTML='';
+}
+document.addEventListener('click',e=>{
+  ['owner-dropdown'].forEach(id=>{
+    const d=document.getElementById(id);
+    if(d&&!d.closest('.owner-wrap').contains(e.target))d.classList.remove('open');
+  });
+});
+
+// ── File uploads ──────────────────────────────────────────────────────────────
+function handleFiles(input, listId, zoneId){
+  const list=document.getElementById(listId);
+  const items=list.querySelector('.file-items');
+  items.innerHTML='';
+  Array.from(input.files).forEach(f=>{
+    const div=document.createElement('div');
+    div.className='file-item';
+    div.innerHTML=`<span class="file-name">📎 ${f.name}</span><span class="file-size">${(f.size/1024).toFixed(0)} KB</span>`;
+    items.appendChild(div);
+  });
+  list.style.display=input.files.length?'block':'none';
+}
+function handleDrop(ev,zoneId,inputId,listId){
+  ev.preventDefault();
+  document.getElementById(zoneId).classList.remove('drag');
+  const dt=ev.dataTransfer;
+  if(dt.files.length){
+    const inp=document.getElementById(inputId);
+    inp.files=dt.files;
+    handleFiles(inp,listId,zoneId);
+  }
+}
+function clearFiles(inputId,listId,zoneId){
+  document.getElementById(inputId).value='';
+  document.getElementById(listId).style.display='none';
+  document.getElementById(listId).querySelector('.file-items').innerHTML='';
+}
+
+// ── Helpers ───────────────────────────────────────────────────────────────────
+function rval(id){ const el=document.getElementById(id); return el?el.value:''; }
+function rchecked(name){ return Array.from(document.querySelectorAll(`[name="${name}"]:checked`)).map(i=>i.value).join(', '); }
+
+// ── Submit ────────────────────────────────────────────────────────────────────
+async function submitBrief(){
+  generateJobId();
+
+  const required = [
+    {id:'f-brand',label:'Client'},
+    {id:'f-category',label:'Brand'},
+    {id:'f-assignment',label:'Country'},
+    {id:'f-market',label:'Region'},
+    {id:'f-assignment-name',label:'Assignment Name'},
+    {id:'projectDescription',label:'Project Description'},
+  ];
+  for(const f of required){
+    if(!rval(f.id).trim()){
+      alert(`Please fill in: ${f.label}`);
+      document.getElementById(f.id).focus();
+      return;
+    }
+  }
+  if(!document.querySelector('[name="division"]:checked')){
+    alert('Please select a Division'); return;
+  }
+  if(!document.querySelector('[name="proj-type"]:checked')){
+    alert('Please select a Project Type'); return;
+  }
+
+  document.getElementById('submitBtn').disabled=true;
+
+  const projType = rchecked('proj-type');
+  const payload={
+    jobId,
+    briefType:'Promo Brief',
+    client:rval('f-brand'),
+    brand:rval('f-category'),
+    country:rval('f-assignment'),
+    region:rval('f-market'),
+    assignmentName:rval('f-assignment-name'),
+    connectFlowNumber:rval('f-connect'),
+    assignmentOwner:rval('f-owner-val')||rval('f-owner'),
+    division:rchecked('division'),
+    projectType:projType,
+    countriesCovered:projType==='Market / Brand Research'?rval('countriesCovered'):'',
+    projectDescription:rval('projectDescription'),
+    briefActions:rval('briefActions'),
+    submittedAt:new Date().toISOString(),
+  };
+
+  try{
+    await fetch('https://brief-router.linkcs.workers.dev/submit',{
+      method:'POST',headers:{'Content-Type':'application/json'},
+      body:JSON.stringify(payload)
+    });
+  }catch(e){
+    try{
+      await fetch('https://usebasin.com/f/95be9b45216d',{
+        method:'POST',headers:{'Content-Type':'application/json'},
+        body:JSON.stringify(payload)
+      });
+    }catch{}
+  }
+
+  document.getElementById('confirmId').textContent=jobId;
+  document.getElementById('confirmSummary').innerHTML=`
+    <div class="erow"><span class="ek">Client</span><span class="ev">${payload.client}</span></div>
+    <div class="erow"><span class="ek">Brand</span><span class="ev">${payload.brand}</span></div>
+    <div class="erow"><span class="ek">Country / Region</span><span class="ev">${payload.country} — ${payload.region}</span></div>
+    <div class="erow"><span class="ek">Assignment Name</span><span class="ev">${payload.assignmentName}</span></div>
+    <div class="erow"><span class="ek">Division</span><span class="ev">${payload.division}</span></div>
+    <div class="erow"><span class="ek">Project Type</span><span class="ev">${payload.projectType}</span></div>
+  `;
+  document.getElementById('confirmOverlay').classList.add('show');
+}
+</script>
+</body>
+</html>

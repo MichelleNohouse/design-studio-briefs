@@ -156,8 +156,8 @@ hr.div{border:none;border-top:1px solid var(--mist);margin:16px 0}
       <div class="field"><label>Assignment Name <span class="req">*</span></label><input type="text" id="f-assignment-name" placeholder="Give this project a clear name…"></div>
       <div class="field"><label>Project Type <span class="req">*</span></label>
         <div class="choice-group" id="project-type-group" style="flex-wrap:wrap;gap:8px">
-          <label class="choice-btn" onclick="pickRadio(this,'project-type-group')"><input type="radio" name="project-type" value="Branded Mock-Up"><span class="c-dot"></span>Branded Mock-Up</label>
-          <label class="choice-btn" onclick="pickRadio(this,'project-type-group')"><input type="radio" name="project-type" value="Image Editing / Resizing"><span class="c-dot"></span>Image Editing / Resizing</label>
+          <label class="choice-btn" onclick="pickCheck(this,'project-type-group')"><input type="checkbox" name="project-type" value="Branded Mock-Up"><span class="c-dot"></span>Branded Mock-Up</label>
+          <label class="choice-btn" onclick="pickCheck(this,'project-type-group')"><input type="checkbox" name="project-type" value="Image Editing / Resizing"><span class="c-dot"></span>Image Editing / Resizing</label>
         </div>
       </div>
       <div class="field"><label>Connect / Flow Number <span class="opt">(optional)</span></label><input type="text" id="f-connect" placeholder="e.g. FL-12345…"></div>
@@ -166,6 +166,11 @@ hr.div{border:none;border-top:1px solid var(--mist);margin:16px 0}
           <div class="owner-dropdown" id="owner-dropdown"></div>
         </div>
         <span class="field-hint">Type at least 2 characters to search the company directory</span></div>
+      <div class="field"><label>Requestor Manager</label><div class="owner-wrap">
+          <input type="text" id="f-req-mgr" class="owner-input" placeholder="Search by name…" autocomplete="off" oninput="initReqMgrSearch(this.value)">
+          <div class="owner-dropdown" id="req-mgr-dropdown"></div>
+          <input type="hidden" id="f-req-mgr-val">
+        </div></div>
       <div class="field"><label>Division <span class="req">*</span></label>
         <div class="choice-group" id="division-group">
           <label class="choice-btn" onclick="pickRadio(this,'division-group')"><input type="radio" name="division" value="Transactional"><span class="c-dot"></span>Transactional</label>
@@ -207,7 +212,11 @@ hr.div{border:none;border-top:1px solid var(--mist);margin:16px 0}
 
 <div class="submit-bar">
   <div class="submit-meta">Brief type: <strong>🥉 Bronze — Production Request</strong></div>
-  <button class="btn-submit" onclick="submitForm()">Submit Brief →</button>
+  <div class="teams-note" style="background:#E8F4FD;border-left:4px solid #0078D4;border-radius:4px;padding:14px 18px;margin-bottom:16px;font-size:13.5px;line-height:1.6;color:#2D3748">
+    <strong style="color:#0078D4">💬 Microsoft Teams</strong><br>
+    When you submit your brief, an active chat will appear in your Teams messages allowing direct contact with the designer assigned to your brief.
+  </div>
+    <button class="btn-submit" onclick="submitForm()">Submit Brief →</button>
   <p class="submit-hint">Please click once only — larger files may take up to 10 seconds to submit. Please wait.</p>
 </div>
 </div>
@@ -224,6 +233,16 @@ hr.div{border:none;border-top:1px solid var(--mist);margin:16px 0}
 
 <script>
 const g=id=>document.getElementById(id);
+
+function pickCheck(el,gid){
+  el.classList.toggle('selected');
+  el.querySelector('input').checked = el.classList.contains('selected');
+  if(gid==='project-type-group') triggerProjectType();
+}
+function getCheckedVals(gid){
+  return Array.from(document.querySelectorAll('#'+gid+' input:checked')).map(i=>i.value);
+}
+
 function pickRadio(el,gid){document.querySelectorAll('#'+gid+' .choice-btn').forEach(b=>b.classList.remove('selected'));el.classList.add('selected');el.querySelector('input').checked=true;}
 
 function handleFile(input, displayId, zoneId){
@@ -339,7 +358,7 @@ async function submitForm(){
     fd.append('Client',val('f-brand'));fd.append('Brand',val('f-category'));
     fd.append('Country',val('f-assignment'));fd.append('Assignment Owner',val('f-owner'));
     fd.append('Assignment Name',val('f-assignment-name'));
-    fd.append('Project Type',rval('project-type'));
+    fd.append('Project Type',getCheckedVals('project-type-group').join(', '));
     fd.append('Connect / Flow Number',val('f-connect'));
     fd.append('Region',val('f-market'));fd.append('Division',rval('division'));
     fd.append('Key Visual Required',rval('kv'));fd.append('Files to Production House',rval('pfiles'));
@@ -363,7 +382,7 @@ async function submitForm(){
       'Connect / Flow Number':val('f-connect'),
       'Region':val('f-market'),
       'Assignment Name':val('f-assignment-name'),
-      'Project Type':rval('project-type'),
+      'Project Type':getCheckedVals('project-type-group').join(', '),
       'Division':rval('division'),
       'Request Details':val('f-request'),
       'Request ID':rid,
@@ -453,6 +472,46 @@ function selectOwner(name, email){
 }
 
 document.addEventListener('DOMContentLoaded', initOwnerSearch);
+
+// Requestor Manager search (same pattern as Assignment Owner)
+let reqMgrTimer = null;
+function initReqMgrSearch(q){
+  const input = document.getElementById("f-req-mgr");
+  const dropdown = document.getElementById("req-mgr-dropdown");
+  input.classList.remove("owner-selected");
+  clearTimeout(reqMgrTimer);
+  if(!q || q.length < 2){ dropdown.classList.remove("open"); return; }
+  dropdown.innerHTML = "<div class="owner-loading">Searching directory…</div>";
+  dropdown.classList.add("open");
+  reqMgrTimer = setTimeout(async () => {
+    const results = await searchOwner(q);
+    if(!results.length){
+      dropdown.innerHTML = "<div class="owner-loading">No matches found — try a different name</div>";
+      return;
+    }
+    dropdown.innerHTML = results.map(u =>
+      "<div class="owner-option" onclick="selectReqMgr( + u.displayName.replace(/'/g,') + , + (u.mail||).replace(/'/g,') + )">" +
+      "<span class="owner-option-name">" + u.displayName + "</span>" +
+      "<span class="owner-option-email">" + (u.mail||"") + (u.jobTitle ? " · " + u.jobTitle : "") + "</span>" +
+      "</div>"
+    ).join("");
+  }, 350);
+}
+function selectReqMgr(name, email){
+  const input = document.getElementById("f-req-mgr");
+  const dropdown = document.getElementById("req-mgr-dropdown");
+  const hidden = document.getElementById("f-req-mgr-val");
+  input.value = name;
+  input.classList.add("owner-selected");
+  if(hidden) hidden.value = email || name;
+  dropdown.classList.remove("open");
+}
+document.addEventListener("click", function(e){
+  const drop = document.getElementById("req-mgr-dropdown");
+  const wrap = document.getElementById("f-req-mgr");
+  if(drop && wrap && !wrap.closest(".owner-wrap").contains(e.target)) drop.classList.remove("open");
+});
+
 </script>
 </body>
 </html>
