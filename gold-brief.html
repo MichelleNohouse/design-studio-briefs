@@ -173,14 +173,14 @@ body{font-family:'DM Sans',sans-serif;font-size:14px;background:var(--mist);colo
       <div class="field"><label>Assignment Name <span class="req">*</span></label><input type="text" id="f-assignment-name" placeholder="Give this project a clear name…"></div>
       <div class="field"><label>Project Type <span class="req">*</span></label>
         <div class="choice-group" id="project-type-group" style="flex-wrap:wrap;gap:8px">
-          <label class="choice-btn" onclick="pickCheck(this,'project-type-group')"><input type="checkbox" name="project-type" value="Concept / Ideation"><span class="c-dot"></span>Concept / Ideation</label>
-          <label class="choice-btn" onclick="pickCheck(this,'project-type-group')"><input type="checkbox" name="project-type" value="Event Activation"><span class="c-dot"></span>Event Activation</label>
-          <label class="choice-btn" onclick="pickCheck(this,'project-type-group')"><input type="checkbox" name="project-type" value="New Business"><span class="c-dot"></span>New Business</label>
-          <label class="choice-btn" onclick="pickCheck(this,'project-type-group')"><input type="checkbox" name="project-type" value="Pitch Deck"><span class="c-dot"></span>Pitch Deck</label>
-          <label class="choice-btn" onclick="pickCheck(this,'project-type-group')"><input type="checkbox" name="project-type" value="Point of Sale"><span class="c-dot"></span>Point of Sale</label>
-          <label class="choice-btn" onclick="pickCheck(this,'project-type-group')"><input type="checkbox" name="project-type" value="Retail Activation"><span class="c-dot"></span>Retail Activation</label>
-          <label class="choice-btn" onclick="pickCheck(this,'project-type-group')"><input type="checkbox" name="project-type" value="Retail Display"><span class="c-dot"></span>Retail Display</label>
-          <label class="choice-btn" onclick="pickCheck(this,'project-type-group')"><input type="checkbox" name="project-type" value="Sales Promotion"><span class="c-dot"></span>Sales Promotion</label>
+          <label class="choice-btn" onclick="pickCheck(this,'project-type-group',event)"><input type="checkbox" name="project-type" value="Concept / Ideation"><span class="c-dot"></span>Concept / Ideation</label>
+          <label class="choice-btn" onclick="pickCheck(this,'project-type-group',event)"><input type="checkbox" name="project-type" value="Event Activation"><span class="c-dot"></span>Event Activation</label>
+          <label class="choice-btn" onclick="pickCheck(this,'project-type-group',event)"><input type="checkbox" name="project-type" value="New Business"><span class="c-dot"></span>New Business</label>
+          <label class="choice-btn" onclick="pickCheck(this,'project-type-group',event)"><input type="checkbox" name="project-type" value="Pitch Deck"><span class="c-dot"></span>Pitch Deck</label>
+          <label class="choice-btn" onclick="pickCheck(this,'project-type-group',event)"><input type="checkbox" name="project-type" value="Point of Sale"><span class="c-dot"></span>Point of Sale</label>
+          <label class="choice-btn" onclick="pickCheck(this,'project-type-group',event)"><input type="checkbox" name="project-type" value="Retail Activation"><span class="c-dot"></span>Retail Activation</label>
+          <label class="choice-btn" onclick="pickCheck(this,'project-type-group',event)"><input type="checkbox" name="project-type" value="Retail Display"><span class="c-dot"></span>Retail Display</label>
+          <label class="choice-btn" onclick="pickCheck(this,'project-type-group',event)"><input type="checkbox" name="project-type" value="Sales Promotion"><span class="c-dot"></span>Sales Promotion</label>
         </div>
       </div>
       <div class="field"><label>Connect / Flow Number <span class="opt">(optional)</span></label><input type="text" id="f-connect" placeholder="e.g. FL-12345…"></div>
@@ -296,7 +296,8 @@ body{font-family:'DM Sans',sans-serif;font-size:14px;background:var(--mist);colo
 <script>
 const g=id=>document.getElementById(id);
 
-function pickCheck(el,gid){
+function pickCheck(el,gid,ev){
+  if(ev) ev.preventDefault();
   el.classList.toggle('selected');
   el.querySelector('input').checked = el.classList.contains('selected');
   if(gid==='project-type-group') triggerProjectType();
@@ -579,12 +580,12 @@ function initReqMgrSearch(q){
   input.classList.remove("owner-selected");
   clearTimeout(reqMgrTimer);
   if(!q || q.length < 2){ dropdown.classList.remove("open"); return; }
-  dropdown.innerHTML = "<div class="owner-loading">Searching directory…</div>";
+  dropdown.innerHTML = "<div class='owner-loading'>Searching directory…</div>";
   dropdown.classList.add("open");
   reqMgrTimer = setTimeout(async () => {
     const results = await searchOwner(q);
     if(!results.length){
-      dropdown.innerHTML = "<div class="owner-loading">No matches found — try a different name</div>";
+      dropdown.innerHTML = "<div class='owner-loading'>No matches found — try a different name</div>";
       return;
     }
     dropdown.innerHTML = results.map(u =>
