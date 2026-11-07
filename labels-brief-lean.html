@@ -170,8 +170,8 @@ body{font-family:'DM Sans',sans-serif;background:var(--mist);color:var(--text);m
         </div>
         <div class="field"><label>Division <span class="req">*</span></label>
           <div class="choice-group" id="division-group">
-            <label class="choice-btn" onclick="pickRadio(this,'division-group')"><input type="radio" name="division" value="Transactional"><span class="c-dot"></span>Transactional</label>
-            <label class="choice-btn" onclick="pickRadio(this,'division-group')"><input type="radio" name="division" value="Outsource"><span class="c-dot"></span>Outsource</label>
+            <label class="choice-btn" onclick="pickRadio(this,'division-group',event)"><input type="radio" name="division" value="Transactional"><span class="c-dot"></span>Transactional</label>
+            <label class="choice-btn" onclick="pickRadio(this,'division-group',event)"><input type="radio" name="division" value="Outsource"><span class="c-dot"></span>Outsource</label>
           </div>
         </div>
       </div>
@@ -281,7 +281,7 @@ function getCheckedVals(gid){
   return Array.from(document.querySelectorAll('#'+gid+' input:checked')).map(i=>i.value);
 }
 
-function pickRadio(el,gid){
+function pickRadio(el,gid,ev){if(ev)ev.preventDefault();
   document.querySelectorAll('#'+gid+' .choice-btn').forEach(b=>b.classList.remove('selected'));
   el.classList.add('selected');
   el.querySelector('input').checked=true;
