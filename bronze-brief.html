@@ -488,8 +488,8 @@ function initReqMgrSearch(q){
       return;
     }
     dropdown.innerHTML = results.map(u =>
-      `<div class="owner-option" onclick="selectReqMgr('${u.displayName.replace(/'/g,\"\\'\")}','${(u.mail||'').replace(/'/g,\"\\'\")}')"><span class="owner-option-name">${u.displayName}</span><span class="owner-option-email">${u.mail||''}${u.jobTitle?' · '+u.jobTitle:''}</span></div>` 
-    ).join("");
+      '<div class="owner-option" onclick="selectReqMgr(\'' + u.displayName.replace(/'/g,"\'") + '\',\'' + (u.mail||'').replace(/'/g,"\'") + '\')"><span class="owner-option-name">' + u.displayName + '</span><span class="owner-option-email">' + (u.mail||'') + (u.jobTitle?' · '+u.jobTitle:'') + '</span></div>'
+    ).join('');
   }, 350);
 }
 function selectReqMgr(name, email){
