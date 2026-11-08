@@ -348,7 +348,7 @@ async function submitForm(){
     uploadFilesToSharePoint(rid,g('ref-input')?.files).catch(e=>console.warn('File upload failed:',e));
 
     const paPayload={
-      'Brief Type':'Artwork — Design Brief',
+      'Brief Type':'Artwork Brief',
       'Client':val('f-brand'),
       'Brand':val('f-category'),
       'Country':val('f-assignment'),
@@ -374,7 +374,7 @@ async function submitForm(){
 
     // Basin
     const fd=new FormData();
-    fd.append('Brief Type','Artwork — Design Brief');
+    fd.append('Brief Type','Artwork Brief');
     fd.append('Client',val('f-brand'));
     fd.append('Brand',val('f-category'));
     fd.append('Country',val('f-assignment'));
