@@ -464,22 +464,23 @@ async function submitBrief(){
   document.getElementById('submitBtn').disabled=true;
 
   const projType = rchecked('proj-type');
+  const now = new Date();
   const payload={
-    jobId,
-    briefType:'Promo Brief',
-    client:rval('f-brand'),
-    brand:rval('f-category'),
-    country:rval('f-assignment'),
-    region:rval('f-market'),
-    assignmentName:rval('f-assignment-name'),
-    connectFlowNumber:rval('f-connect'),
-    assignmentOwner:rval('f-owner-val')||rval('f-owner'),
-    division:rchecked('division'),
-    projectType:projType,
-    countriesCovered:projType==='Market / Brand Research'?rval('countriesCovered'):'',
-    projectDescription:rval('projectDescription'),
-    briefActions:rval('briefActions'),
-    submittedAt:new Date().toISOString(),
+    'Brief Type':'Promo Brief',
+    'Job_ID':jobId,
+    'Client':rval('f-brand'),
+    'Brand':rval('f-category'),
+    'Country':rval('f-assignment'),
+    'Region':rval('f-market'),
+    'Assignment Name':rval('f-assignment-name'),
+    'Connect / Flow Number':rval('f-connect'),
+    'Assignment Owner':rval('f-owner-val')||rval('f-owner'),
+    'Division':rchecked('division'),
+    'Project Type':projType,
+    'Request Details':rval('projectDescription'),
+    'Brief Request':rval('briefActions'),
+    'Submitted':now.toISOString(),
+    'Files Attached':'No',
   };
 
   try{
