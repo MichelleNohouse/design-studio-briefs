@@ -329,7 +329,8 @@ function generateJobId(){
   const dd = String(now.getDate()).padStart(2,'0');
   const rnd = String(Math.floor(1000+Math.random()*9000));
   jobId = `PR-${yy}${mm}${dd}-${rnd}`;
-  document.getElementById('jobIdDisplay').textContent = jobId;
+  const jd=document.getElementById('jobIdDisplay')||document.getElementById('confirmId');
+  if(jd) jd.textContent = jobId;
 }
 
 // ── Progress bar ─────────────────────────────────────────────────────────────
