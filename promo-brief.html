@@ -467,7 +467,7 @@ async function submitBrief(){
   const now = new Date();
   const payload={
     'Brief Type':'Promo Brief',
-    'Job_ID':jobId,
+    'Request ID':jobId,
     'Client':rval('f-brand'),
     'Brand':rval('f-category'),
     'Country':rval('f-assignment'),
@@ -499,12 +499,12 @@ async function submitBrief(){
 
   document.getElementById('confirmId').textContent=jobId;
   document.getElementById('confirmSummary').innerHTML=`
-    <div class="erow"><span class="ek">Client</span><span class="ev">${payload.client}</span></div>
-    <div class="erow"><span class="ek">Brand</span><span class="ev">${payload.brand}</span></div>
-    <div class="erow"><span class="ek">Country / Region</span><span class="ev">${payload.country} — ${payload.region}</span></div>
-    <div class="erow"><span class="ek">Assignment Name</span><span class="ev">${payload.assignmentName}</span></div>
-    <div class="erow"><span class="ek">Division</span><span class="ev">${payload.division}</span></div>
-    <div class="erow"><span class="ek">Project Type</span><span class="ev">${payload.projectType}</span></div>
+    <div class="erow"><span class="ek">Client</span><span class="ev">${payload['Client']}</span></div>
+    <div class="erow"><span class="ek">Brand</span><span class="ev">${payload['Brand']}</span></div>
+    <div class="erow"><span class="ek">Country / Region</span><span class="ev">${payload['Country']} — ${payload['Region']}</span></div>
+    <div class="erow"><span class="ek">Assignment Name</span><span class="ev">${payload['Assignment Name']}</span></div>
+    <div class="erow"><span class="ek">Division</span><span class="ev">${payload['Division']}</span></div>
+    <div class="erow"><span class="ek">Project Type</span><span class="ev">${payload['Project Type']}</span></div>
   `;
   document.getElementById('confirmOverlay').classList.add('show');
 }
