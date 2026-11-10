@@ -382,6 +382,7 @@ function searchOwner(inputId,dropId,valId){
     try{
       const r=await fetch(`https://link-directory-search.michelle-nienhuis.workers.dev?q=${encodeURIComponent(q)}`);
       const json=await r.json();
+      console.log('Worker response:',JSON.stringify(json));
       const data=json.value||json||[];
       if(!data.length){drop.innerHTML='<div class="owner-loading">No results found</div>';return;}
       drop.innerHTML=data.map(p=>`<div class="owner-option" onclick="selectOwner('${inputId}','${dropId}','${valId}','${p.displayName}','${p.mail||''}')"><span class="owner-option-name">${p.displayName}</span><span class="owner-option-email">${p.mail||''}</span></div>`).join('');
