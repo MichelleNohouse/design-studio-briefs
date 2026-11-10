@@ -308,8 +308,10 @@ function triggerProjectType(){
   const hasWM  = pts.includes('Watermarkings');
   const hasNonWM = pts.some(p=>p!=='Watermarkings');
 
-  document.getElementById('watermark-panel').style.display = onlyWM?'block':'none';
-  document.getElementById('product-panel').style.display   = (pts.length===0||hasNonWM)?'block':'none';
+  const wmPanel=document.getElementById('watermark-panel');
+  if(wmPanel) wmPanel.style.display = onlyWM?'block':'none';
+  const prodPanel=document.getElementById('product-panel');
+  if(prodPanel) prodPanel.style.display = (pts.length===0||hasNonWM)?'block':'none';
 
   // Material + Dimensions: hide only if sole selection is Watermarkings
   const showMatDim = !onlyWM;
@@ -355,7 +357,9 @@ function removeImporterRow(btn){
 }
 
 function updateRemoveButtons(){
-  const rows=g('importer-rows').querySelectorAll('.importer-row');
+  const ic=g('importer-rows');
+  if(!ic) return;
+  const rows=ic.querySelectorAll('.importer-row');
   rows.forEach((r,i)=>{
     const btn=r.querySelector('.btn-remove-row');
     if(btn)btn.style.visibility=rows.length>1?'visible':'hidden';
@@ -363,7 +367,9 @@ function updateRemoveButtons(){
 }
 
 function getImporterData(){
-  const rows=g('importer-rows').querySelectorAll('.importer-row');
+  const container=g('importer-rows');
+  if(!container) return '';
+  const rows=container.querySelectorAll('.importer-row');
   const results=[];
   rows.forEach(row=>{
     const inputs=row.querySelectorAll('input,textarea');
